@@ -1,17 +1,9 @@
 import React from 'react';
 import { PersonIcon, CreditCardIcon, SettingsIcon, HelpCircleIcon, LogOutIcon, ChevronRightIcon } from './icons';
-
-// Mock user data for demonstration
-const mockUser = {
-  name: 'Alex Doe',
-  email: 'alex.doe@example.com',
-  avatarUrl: 'https://picsum.photos/id/1027/200/200',
-  memberSince: 'June 2024',
-  totalRides: 42,
-  rating: 4.95,
-};
+import { User } from '../types';
 
 interface ProfileScreenProps {
+  user: User;
   onLogout: () => void;
   onNavigateToEditProfile: () => void;
   onNavigateToPayments: () => void;
@@ -20,6 +12,7 @@ interface ProfileScreenProps {
 }
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ 
+    user,
     onLogout, 
     onNavigateToEditProfile,
     onNavigateToPayments,
@@ -30,21 +23,21 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
     <div className="h-full flex flex-col bg-gray-900 text-white p-6 space-y-8">
       {/* Profile Header */}
       <div className="flex items-center space-x-4">
-        <img src={mockUser.avatarUrl} alt={mockUser.name} className="w-20 h-20 rounded-full border-2 border-cyan-400" />
+        <img src={user.avatarUrl} alt={user.name} className="w-20 h-20 rounded-full border-2 border-cyan-400" />
         <div>
-          <h1 className="text-2xl font-bold">{mockUser.name}</h1>
-          <p className="text-gray-400">{mockUser.email}</p>
+          <h1 className="text-2xl font-bold">{user.name}</h1>
+          <p className="text-gray-400">{user.email}</p>
         </div>
       </div>
 
       {/* User Stats */}
       <div className="grid grid-cols-2 gap-4 text-center">
         <div className="bg-gray-800 p-4 rounded-lg">
-          <p className="text-2xl font-bold">{mockUser.totalRides}</p>
+          <p className="text-2xl font-bold">{user.totalRides}</p>
           <p className="text-sm text-gray-400">Total Rides</p>
         </div>
         <div className="bg-gray-800 p-4 rounded-lg">
-          <p className="text-2xl font-bold">{mockUser.rating.toFixed(2)} ★</p>
+          <p className="text-2xl font-bold">{user.rating.toFixed(2)} ★</p>
           <p className="text-sm text-gray-400">Rating</p>
         </div>
       </div>

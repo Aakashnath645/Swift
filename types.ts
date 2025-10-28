@@ -43,6 +43,25 @@ export interface Driver {
   eta: number; // in minutes
 }
 
+export interface User {
+  name: string;
+  email: string;
+  avatarUrl: string;
+  totalRides: number;
+  rating: number;
+}
+
+export interface PaymentMethod {
+  id: string;
+  type: 'visa' | 'mastercard';
+  last4: string;
+}
+
+export interface AppSettings {
+    pushNotifications: boolean;
+    emailNotifications: boolean;
+}
+
 export interface GroundingChunk {
   maps?: {
     uri: string;

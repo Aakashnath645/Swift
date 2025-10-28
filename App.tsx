@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Screen, Page, RideOption, Driver, Location } from './types';
+import { Screen, Page, RideOption, Driver, Location, User, PaymentMethod, AppSettings } from './types';
 import SplashScreen from './components/SplashScreen';
 import LoginScreen from './components/LoginScreen';
 import SignUpScreen from './components/SignUpScreen';
@@ -9,7 +9,7 @@ import ProfileScreen from './components/ProfileScreen';
 import BottomNavBar from './components/BottomNavBar';
 import RideSelectionScreen from './components/RideSelectionScreen';
 import TripScreen from './components/TripScreen';
-import { rideOptions, mockDriver } from './constants';
+import { rideOptions, mockDriver, mockUser, initialPaymentMethods, initialAppSettings } from './constants';
 import EditProfileScreen from './components/EditProfileScreen';
 import PaymentMethodsScreen from './components/PaymentMethodsScreen';
 import SettingsScreen from './components/SettingsScreen';
@@ -19,6 +19,13 @@ import HelpScreen from './components/HelpScreen';
 const App: React.FC = () => {
   const [screen, setScreen] = useState<Screen>(Screen.SPLASH);
   const [page, setPage] = useState<Page>(Page.HOME);
+  
+  // App-wide state
+  const [user, setUser] = useState<User>(mockUser);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(initialPaymentMethods);
+  const [appSettings, setAppSettings] = useState<AppSettings>(initialAppSettings);
+  
+  // Ride flow state
   const [pickupLocation, setPickupLocation] = useState<Location | null>(null);
   const [dropoffLocation, setDropoffLocation] = useState<Location | null>(null);
   const [selectedRide, setSelectedRide] = useState<RideOption | null>(null);
@@ -56,6 +63,19 @@ const App: React.FC = () => {
     setDropoffLocation(null);
     setSelectedRide(null);
     setDriver(null);
+    setUser(mockUser); // Reset user
+  }, []);
+
+  const handleProfileUpdate = useCallback((updatedUser: User) => {
+    setUser(updatedUser);
+  }, []);
+
+  const handlePaymentMethodsUpdate = useCallback((updatedMethods: PaymentMethod[]) => {
+    setPaymentMethods(updatedMethods);
+  }, []);
+
+  const handleSettingsUpdate = useCallback((updatedSettings: AppSettings) => {
+    setAppSettings(updatedSettings);
   }, []);
 
 
@@ -106,6 +126,7 @@ const App: React.FC = () => {
             return <ActivityScreen />;
         case Page.PROFILE:
             return <ProfileScreen 
+                user={user}
                 onLogout={handleLogout} 
                 onNavigateToEditProfile={() => handleNavigateTo(Screen.EDIT_PROFILE)}
                 onNavigateToPayments={() => handleNavigateTo(Screen.PAYMENT_METHODS)}
@@ -156,11 +177,11 @@ const App: React.FC = () => {
         }
         return <SplashScreen />; // Fallback
       case Screen.EDIT_PROFILE:
-        return <EditProfileScreen onBack={handleReturnToProfile} />;
+        return <EditProfileScreen user={user} onSave={handleProfileUpdate} onBack={handleReturnToProfile} />;
       case Screen.PAYMENT_METHODS:
-        return <PaymentMethodsScreen onBack={handleReturnToProfile} />;
+        return <PaymentMethodsScreen paymentMethods={paymentMethods} onUpdate={handlePaymentMethodsUpdate} onBack={handleReturnToProfile} />;
       case Screen.SETTINGS:
-        return <SettingsScreen onBack={handleReturnToProfile} />;
+        return <SettingsScreen settings={appSettings} onUpdate={handleSettingsUpdate} onBack={handleReturnToProfile} />;
       case Screen.HELP:
         return <HelpScreen onBack={handleReturnToProfile} />;
       default:

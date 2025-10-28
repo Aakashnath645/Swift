@@ -1,6 +1,5 @@
-
 import React from 'react';
-import type { RideOption, Driver } from './types';
+import type { RideOption, Driver, User, PaymentMethod, AppSettings } from './types';
 import { CarIcon, PersonIcon, ZapIcon } from './components/icons';
 
 export const rideOptions: RideOption[] = [
@@ -37,4 +36,22 @@ export const mockDriver: Driver = {
   licensePlate: '5XYZ123',
   avatarUrl: 'https://picsum.photos/id/1005/200/200',
   eta: 3,
+};
+
+export const mockUser: User = {
+  name: 'Alex Doe',
+  email: 'alex.doe@example.com',
+  avatarUrl: 'https://picsum.photos/id/1027/200/200',
+  totalRides: 42,
+  rating: 4.95,
+};
+
+export const initialPaymentMethods: PaymentMethod[] = [
+    { id: '1', type: 'visa', last4: '4242' },
+    { id: '2', type: 'mastercard', last4: '8921' },
+];
+
+export const initialAppSettings: AppSettings = {
+    pushNotifications: true,
+    emailNotifications: false,
 };
