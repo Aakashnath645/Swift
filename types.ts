@@ -64,6 +64,16 @@ export interface AppSettings {
     emailNotifications: boolean;
 }
 
+export interface TripRecord {
+  id: string;
+  pickup: Location;
+  dropoff: Location;
+  fare: number;
+  date: string; // ISO string
+  rideName: string;
+}
+
+
 export interface GroundingChunk {
   maps?: {
     uri: string;

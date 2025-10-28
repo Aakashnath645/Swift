@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Screen, Page, RideOption, Driver, Location, User, PaymentMethod, AppSettings } from './types';
+import { Screen, Page, RideOption, Driver, Location, User, PaymentMethod, AppSettings, TripRecord } from './types';
 import SplashScreen from './components/SplashScreen';
 import LoginScreen from './components/LoginScreen';
 import SignUpScreen from './components/SignUpScreen';
@@ -24,6 +24,7 @@ const App: React.FC = () => {
   const [user, setUser] = useState<User>(mockUser);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(initialPaymentMethods);
   const [appSettings, setAppSettings] = useState<AppSettings>(initialAppSettings);
+  const [tripHistory, setTripHistory] = useState<TripRecord[]>([]);
   
   // Ride flow state
   const [pickupLocation, setPickupLocation] = useState<Location | null>(null);
@@ -107,8 +108,19 @@ const App: React.FC = () => {
   }, [])
 
   const handleTripEnd = useCallback(() => {
-      resetRideState();
-  }, [resetRideState]);
+    if (pickupLocation && dropoffLocation && selectedRide && fare) {
+        const newTrip: TripRecord = {
+            id: new Date().toISOString(),
+            pickup: pickupLocation,
+            dropoff: dropoffLocation,
+            fare: fare,
+            date: new Date().toISOString(),
+            rideName: selectedRide.name,
+        };
+        setTripHistory(prevHistory => [newTrip, ...prevHistory]);
+    }
+    resetRideState();
+  }, [resetRideState, pickupLocation, dropoffLocation, selectedRide, fare]);
 
   const handleTripCancel = useCallback(() => {
     resetRideState();
@@ -135,7 +147,7 @@ const App: React.FC = () => {
         case Page.HOME:
             return <HomeScreen onLocationsSet={handleLocationsSet} />;
         case Page.ACTIVITY:
-            return <ActivityScreen />;
+            return <ActivityScreen tripHistory={tripHistory} />;
         case Page.PROFILE:
             return <ProfileScreen 
                 user={user}

@@ -30,3 +30,17 @@ export const formatCurrency = (amount: number): string => {
         return `${symbol}${amount.toFixed(2)}`;
     }
 };
+
+export const formatDate = (isoString: string): string => {
+    const date = new Date(isoString);
+    try {
+        return new Intl.DateTimeFormat(navigator.language, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        }).format(date);
+    } catch (e) {
+        console.error("Date formatting failed:", e);
+        return date.toDateString(); // Fallback
+    }
+};
