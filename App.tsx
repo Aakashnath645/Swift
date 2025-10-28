@@ -9,7 +9,7 @@ import ProfileScreen from './components/ProfileScreen';
 import BottomNavBar from './components/BottomNavBar';
 import RideSelectionScreen from './components/RideSelectionScreen';
 import TripScreen from './components/TripScreen';
-import { rideOptions, mockDriver, mockUser, initialPaymentMethods, initialAppSettings } from './constants';
+import { rideOptions, mockDrivers, mockUser, initialPaymentMethods, initialAppSettings } from './constants';
 import EditProfileScreen from './components/EditProfileScreen';
 import PaymentMethodsScreen from './components/PaymentMethodsScreen';
 import SettingsScreen from './components/SettingsScreen';
@@ -33,6 +33,7 @@ const App: React.FC = () => {
   const [selectedRide, setSelectedRide] = useState<RideOption | null>(null);
   const [driver, setDriver] = useState<Driver | null>(null);
   const [fare, setFare] = useState<number | null>(null);
+  const [eta, setEta] = useState<number | null>(null);
 
   useEffect(() => {
     if (screen === Screen.SPLASH) {
@@ -67,6 +68,7 @@ const App: React.FC = () => {
     setSelectedRide(null);
     setDriver(null);
     setFare(null);
+    setEta(null);
     setUser(mockUser); // Reset user
     setTripHistory([]); // Clear ride history on logout
   }, []);
@@ -93,11 +95,14 @@ const App: React.FC = () => {
     setScreen(Screen.SELECTING_RIDE);
   }, []);
 
-  const handleRideSelected = useCallback((ride: RideOption, calculatedFare: number) => {
+  const handleRideSelected = useCallback((ride: RideOption, calculatedFare: number, tripEta: number) => {
     setSelectedRide(ride);
     setFare(calculatedFare);
+    setEta(tripEta);
     setTimeout(() => {
-        setDriver(mockDriver);
+        // Randomly select a driver
+        const randomDriver = mockDrivers[Math.floor(Math.random() * mockDrivers.length)];
+        setDriver(randomDriver);
         setScreen(Screen.ON_TRIP);
     }, 3000);
   }, []);
@@ -110,6 +115,7 @@ const App: React.FC = () => {
     setSelectedRide(null);
     setDriver(null);
     setFare(null);
+    setEta(null);
   }, [])
 
   const handleTripEnd = useCallback(() => {
@@ -191,20 +197,20 @@ const App: React.FC = () => {
                 pickup={pickupLocation}
                 dropoff={dropoffLocation}
                 rideOptions={rideOptions}
-                driver={mockDriver}
                 onRideSelected={handleRideSelected} 
                 onCancel={handleCancelSearch}
             />;
         }
         return <SplashScreen />; // Fallback
       case Screen.ON_TRIP:
-        if (driver && selectedRide && pickupLocation && dropoffLocation && fare) {
+        if (driver && selectedRide && pickupLocation && dropoffLocation && fare && eta) {
             return <TripScreen 
                 driver={driver} 
                 ride={selectedRide}
                 pickup={pickupLocation}
                 dropoff={dropoffLocation}
                 fare={fare}
+                eta={eta}
                 onTripEnd={handleTripEnd}
                 onTripCancel={handleTripCancel}
             />;

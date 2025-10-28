@@ -29,16 +29,35 @@ export const rideOptions: RideOption[] = [
   }
 ];
 
-export const mockDriver: Driver = {
-  name: 'David L.',
-  rating: 4.9,
-  vehicleModel: 'Toyota Prius',
-  licensePlate: '5XYZ123',
-  avatarUrl: 'https://picsum.photos/id/1005/200/200',
-  eta: 3,
-  totalTrips: 1245,
-  memberSince: '2021',
-};
+export const mockDrivers: Driver[] = [
+  {
+    name: 'David L.',
+    rating: 4.9,
+    vehicleModel: 'Toyota Prius',
+    licensePlate: '5XYZ123',
+    avatarUrl: 'https://picsum.photos/id/1005/200/200',
+    totalTrips: 1245,
+    memberSince: '2021',
+  },
+  {
+    name: 'Maria G.',
+    rating: 4.8,
+    vehicleModel: 'Honda Civic',
+    licensePlate: '8ABC456',
+    avatarUrl: 'https://picsum.photos/id/1027/200/200',
+    totalTrips: 832,
+    memberSince: '2022',
+  },
+  {
+    name: 'Chen W.',
+    rating: 4.9,
+    vehicleModel: 'Tesla Model 3',
+    licensePlate: '9DEF789',
+    avatarUrl: 'https://picsum.photos/id/1011/200/200',
+    totalTrips: 2109,
+    memberSince: '2020',
+  }
+];
 
 export const mockUser: User = {
   name: 'Alex Doe',

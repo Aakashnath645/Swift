@@ -64,16 +64,16 @@ const AnimatedMapPlaceholder: React.FC<AnimatedMapPlaceholderProps> = ({ status,
       <div className="absolute inset-0 z-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #4A5568 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
       <div className="relative z-10 text-center">
         <div className="animate-subtle-float">
-          <Logo className="w-24 h-24 text-cyan-500 opacity-50 mx-auto" />
+          <Logo className="w-40 h-40 text-cyan-500 opacity-50 mx-auto" />
         </div>
-        <p key={phraseIndex} className="text-white/60 text-lg mt-6 animate-fade-in-out">
+        <p key={phraseIndex} className="text-white/70 text-2xl font-bold mt-8 animate-fade-in-out">
           {catchphrases[phraseIndex]}
         </p>
       </div>
       <style>{`
         @keyframes subtle-float { 
           0%, 100% { transform: translateY(0); } 
-          50% { transform: translateY(-10px); } 
+          50% { transform: translateY(-15px); } 
         } 
         .animate-subtle-float { 
           animation: subtle-float 6s ease-in-out infinite; 

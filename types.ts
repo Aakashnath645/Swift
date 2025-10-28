@@ -41,7 +41,6 @@ export interface Driver {
   vehicleModel: string;
   licensePlate: string;
   avatarUrl: string;
-  eta: number; // in minutes
   totalTrips: number;
   memberSince: string;
 }
@@ -87,4 +86,10 @@ export interface GroundingChunk {
       }[];
     }
   }
+}
+
+export interface ChatMessage {
+  sender: 'user' | 'driver';
+  text: string;
+  timestamp: string;
 }

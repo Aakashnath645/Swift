@@ -3,13 +3,13 @@ import type { RideOption, Location, Driver } from '../types';
 import { ArrowRightIcon, PersonIcon } from './icons';
 import { formatCurrency } from '../utils/formatting';
 import { calculateFare } from '../services/geminiService';
+import { mockDrivers } from '../constants';
 
 interface RideSelectionScreenProps {
   pickup: Location;
   dropoff: Location;
   rideOptions: RideOption[];
-  driver: Driver;
-  onRideSelected: (ride: RideOption, fare: number) => void;
+  onRideSelected: (ride: RideOption, fare: number, eta: number) => void;
   onCancel: () => void;
 }
 
@@ -17,6 +17,7 @@ type FareInfo = {
     fare: number;
     distance: string;
     reasoning: string;
+    eta: number;
     isLoading: boolean;
 };
 
@@ -24,29 +25,31 @@ const RideSelectionScreen: React.FC<RideSelectionScreenProps> = ({
   pickup,
   dropoff,
   rideOptions,
-  driver,
   onRideSelected,
   onCancel,
 }) => {
   const [selectedRideId, setSelectedRideId] = useState<string | null>(rideOptions[0]?.id || null);
   const [isConfirming, setIsConfirming] = useState(false);
   const [fares, setFares] = useState<Record<string, FareInfo>>({});
+  
+  // A random driver is chosen just for calculation purposes. The final driver is assigned in App.tsx.
+  const calculationDriver = React.useMemo(() => mockDrivers[Math.floor(Math.random() * mockDrivers.length)], []);
 
   const getFares = useCallback(async () => {
     const initialFares: Record<string, FareInfo> = {};
     rideOptions.forEach(ride => {
-        initialFares[ride.id] = { fare: 0, distance: '', reasoning: '', isLoading: true };
+        initialFares[ride.id] = { fare: 0, distance: '', reasoning: '', eta: 0, isLoading: true };
     });
     setFares(initialFares);
 
     for (const ride of rideOptions) {
-        const result = await calculateFare(pickup, dropoff, ride, driver);
+        const result = await calculateFare(pickup, dropoff, ride, calculationDriver);
         setFares(prevFares => ({
             ...prevFares,
             [ride.id]: { ...result, isLoading: false }
         }));
     }
-  }, [pickup, dropoff, rideOptions, driver]);
+  }, [pickup, dropoff, rideOptions, calculationDriver]);
 
   useEffect(() => {
     getFares();
@@ -57,7 +60,7 @@ const RideSelectionScreen: React.FC<RideSelectionScreenProps> = ({
     const selectedFareInfo = selectedRideId ? fares[selectedRideId] : null;
     if (selectedRide && selectedFareInfo && !selectedFareInfo.isLoading) {
       setIsConfirming(true);
-      onRideSelected(selectedRide, selectedFareInfo.fare);
+      onRideSelected(selectedRide, selectedFareInfo.fare, selectedFareInfo.eta);
     }
   };
 
@@ -108,9 +111,12 @@ const RideSelectionScreen: React.FC<RideSelectionScreenProps> = ({
                            {fareInfo?.isLoading ? (
                                 <div className="w-6 h-6 border-2 border-t-transparent border-white rounded-full animate-spin ml-auto"></div>
                            ) : (
-                               <p className="font-bold text-lg">{formatCurrency(fareInfo?.fare || 0)}</p>
+                               <div>
+                                   <p className="font-bold text-lg">{formatCurrency(fareInfo?.fare || 0)}</p>
+                                   <p className="text-sm text-gray-400">{`~${fareInfo?.eta || '--'} min`}</p>
+                               </div>
                            )}
-                           <p className="text-sm text-gray-400">{fareInfo?.isLoading ? 'Calculating...' : `Est. ${fareInfo?.distance}`}</p>
+                           
                         </div>
                     </div>
                 );
@@ -120,7 +126,7 @@ const RideSelectionScreen: React.FC<RideSelectionScreenProps> = ({
         <div className="mt-4">
              <button
                 onClick={handleConfirmRide}
-                disabled={!selectedRideId || fares[selectedRideId!]?.isLoading}
+                disabled={!selectedRideId || !fares[selectedRideId] || fares[selectedRideId].isLoading}
                 className="w-full py-4 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold transition-colors disabled:bg-gray-700 disabled:text-gray-400 flex items-center justify-center text-lg"
             >
                 Confirm {rideOptions.find(r => r.id === selectedRideId)?.name || 'Ride'}

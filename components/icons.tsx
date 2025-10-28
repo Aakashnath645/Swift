@@ -153,3 +153,24 @@ export const MapPinIcon: React.FC<IconProps> = (props) => (
         <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" stroke="currentColor" strokeWidth="1.5"/>
     </svg>
 );
+
+export const PhoneAcceptIcon: React.FC<IconProps> = (props) => (
+    <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15.05 5.05001C17.78 2.32001 22.07 3.37001 22.07 3.37001L21.07 8.37001L18.57 7.87001L16.57 9.87001C14.71 10.97 12.59 11.52 10.45 11.53M8.95001 18.95C6.22001 21.68 1.93001 20.63 1.93001 20.63L2.93001 15.63L5.43001 16.13L7.43001 14.13C9.29001 13.03 11.41 12.48 13.55 12.47" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M18.82 11.43C19.7 12.31 20.42 13.33 20.94 14.44" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+export const PhoneEndIcon: React.FC<IconProps> = (props) => (
+    <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15.05 5.05C17.78 2.32 22.07 3.37 22.07 3.37L21.07 8.37L18.57 7.87L16.57 9.87C14.71 10.97 12.59 11.52 10.45 11.53M8.95001 18.95C6.22001 21.68 1.93001 20.63 1.93001 20.63L2.93001 15.63L5.43001 16.13L7.43001 14.13C9.29001 13.03 11.41 12.48 13.55 12.47" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M3 21L21 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+export const SendIcon: React.FC<IconProps> = (props) => (
+    <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 2L11 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
