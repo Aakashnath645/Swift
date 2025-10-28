@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Logo, CarIcon, LocationMarkerIcon } from './icons';
 
 interface AnimatedMapPlaceholderProps {
@@ -7,7 +7,26 @@ interface AnimatedMapPlaceholderProps {
   destination?: string;
 }
 
+const catchphrases = [
+  "Your ride, your way.",
+  "Swiftly there.",
+  "Tap. Ride. Arrive.",
+  "Your city, unlocked."
+];
+
 const AnimatedMapPlaceholder: React.FC<AnimatedMapPlaceholderProps> = ({ status, eta, destination }) => {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+
+  useEffect(() => {
+    if (status === 'idle') {
+      const interval = setInterval(() => {
+        setPhraseIndex(prevIndex => (prevIndex + 1) % catchphrases.length);
+      }, 4000); // 4 seconds to match animation
+      return () => clearInterval(interval);
+    }
+  }, [status]);
+
+
   if (status === 'trip') {
     return (
       <div className="h-full bg-gray-800 flex flex-col items-center justify-center text-gray-400 font-mono p-4 overflow-hidden">
@@ -43,10 +62,32 @@ const AnimatedMapPlaceholder: React.FC<AnimatedMapPlaceholderProps> = ({ status,
   return (
     <div className="h-full bg-gray-800 relative overflow-hidden flex items-center justify-center">
       <div className="absolute inset-0 z-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #4A5568 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-      <div className="relative z-10 animate-subtle-float">
-        <Logo className="w-24 h-24 text-cyan-500 opacity-50" />
+      <div className="relative z-10 text-center">
+        <div className="animate-subtle-float">
+          <Logo className="w-24 h-24 text-cyan-500 opacity-50 mx-auto" />
+        </div>
+        <p key={phraseIndex} className="text-white/60 text-lg mt-6 animate-fade-in-out">
+          {catchphrases[phraseIndex]}
+        </p>
       </div>
-      <style>{`@keyframes subtle-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } } .animate-subtle-float { animation: subtle-float 6s ease-in-out infinite; }`}</style>
+      <style>{`
+        @keyframes subtle-float { 
+          0%, 100% { transform: translateY(0); } 
+          50% { transform: translateY(-10px); } 
+        } 
+        .animate-subtle-float { 
+          animation: subtle-float 6s ease-in-out infinite; 
+        }
+        @keyframes fade-in-out {
+          0% { opacity: 0; transform: translateY(10px); }
+          25% { opacity: 1; transform: translateY(0); }
+          75% { opacity: 1; transform: translateY(0); }
+          100% { opacity: 0; transform: translateY(-10px); }
+        }
+        .animate-fade-in-out {
+          animation: fade-in-out 4s ease-in-out forwards;
+        }
+      `}</style>
     </div>
   );
 };
