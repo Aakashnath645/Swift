@@ -1,0 +1,7 @@
+{
+  "name": "Swift",
+  "description": "A modern, full-scale online cab booking application. Set your destination, choose a ride, and get moving in minutes. Features location-based suggestions powered by the Gemini API.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
