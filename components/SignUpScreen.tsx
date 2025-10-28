@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
 import { Logo } from './icons';
+import { usePlatform } from '../hooks/usePlatform';
 
 interface SignUpScreenProps {
   onSignUp: () => void;
@@ -12,6 +12,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onSwitchToLogin }
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const platform = usePlatform();
 
   const handleSignUpClick = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +23,14 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onSwitchToLogin }
       onSignUp();
     }, 1500);
   };
+
+  const inputClasses = platform === 'ios' 
+    ? "w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white"
+    : "w-full px-4 py-3 bg-gray-800 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500 text-white transition-colors";
+  
+  const buttonClasses = platform === 'ios'
+    ? "w-full py-3 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold transition-colors disabled:bg-gray-500 flex items-center justify-center"
+    : "w-full py-3 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold transition-colors disabled:bg-gray-500 flex items-center justify-center shadow-lg";
 
   return (
     <div className="flex-1 flex flex-col justify-between p-6 bg-gray-900 animate-fadeIn">
@@ -38,7 +47,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onSwitchToLogin }
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white"
+                    className={inputClasses}
                 />
                 <input
                     type="email"
@@ -46,7 +55,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onSwitchToLogin }
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white"
+                    className={inputClasses}
                 />
                 <input
                     type="password"
@@ -54,12 +63,12 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onSwitchToLogin }
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white"
+                    className={inputClasses}
                 />
                  <button
                     type="submit"
                     disabled={isLoading || !name || !email || !password}
-                    className="w-full py-3 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold transition-colors disabled:bg-gray-500 flex items-center justify-center"
+                    className={buttonClasses}
                 >
                     {isLoading ? (
                          <div className="w-6 h-6 border-2 border-t-transparent border-white rounded-full animate-spin"></div>

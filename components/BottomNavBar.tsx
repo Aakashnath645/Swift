@@ -1,6 +1,7 @@
 import React from 'react';
 import { Page } from '../types';
 import { HomeIcon, ReceiptIcon, PersonIcon } from './icons';
+import { usePlatform } from '../hooks/usePlatform';
 
 interface BottomNavBarProps {
   activePage: Page;
@@ -14,8 +15,13 @@ const navItems = [
 ];
 
 const BottomNavBar: React.FC<BottomNavBarProps> = ({ activePage, onNavigate }) => {
+  const platform = usePlatform();
+  const navBarClass = platform === 'ios'
+      ? 'bg-gray-800/80 backdrop-blur-sm border-t border-gray-700/50'
+      : 'bg-gray-800 border-t border-gray-700 shadow-lg';
+
   return (
-    <nav className="flex justify-around items-center bg-gray-900 border-t border-gray-700 py-2" aria-label="Main navigation">
+    <nav className={`flex justify-around items-center ${navBarClass} py-2`} aria-label="Main navigation">
       {navItems.map((item) => {
         const isActive = activePage === item.page;
         return (
@@ -23,7 +29,7 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ activePage, onNavigate }) =
             key={item.label}
             onClick={() => onNavigate(item.page)}
             aria-current={isActive ? 'page' : undefined}
-            className={`flex flex-col items-center justify-center w-1/3 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-500 rounded-md ${
+            className={`flex flex-col items-center justify-center w-1/3 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-500 rounded-md py-1 ${
               isActive ? 'text-cyan-400' : 'text-gray-500 hover:text-gray-300'
             }`}
           >

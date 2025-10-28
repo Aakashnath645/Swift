@@ -1,6 +1,7 @@
 import React from 'react';
-import { ArrowLeftIcon, CreditCardIcon, TrashIcon } from './icons';
+import { CreditCardIcon, TrashIcon } from './icons';
 import { PaymentMethod } from '../types';
+import PageHeader from './PageHeader';
 
 interface PaymentMethodsScreenProps {
   paymentMethods: PaymentMethod[];
@@ -25,12 +26,7 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenProps> = ({ paymentMeth
   
   return (
     <div className="flex-1 flex flex-col bg-gray-900 animate-fadeIn">
-      <header className="flex items-center p-4 border-b border-gray-700">
-        <button onClick={onBack} className="p-2 rounded-full hover:bg-gray-800">
-          <ArrowLeftIcon className="w-6 h-6 text-white" />
-        </button>
-        <h1 className="text-xl font-bold text-white flex-1 text-center mr-8">Payment Methods</h1>
-      </header>
+      <PageHeader title="Payment Methods" onBack={onBack} />
       <main className="flex-1 p-6 flex flex-col justify-between">
         <div className="space-y-4">
             {paymentMethods.length > 0 ? (

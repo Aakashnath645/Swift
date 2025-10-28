@@ -3,6 +3,7 @@ import type { Driver, RideOption, Location } from '../types';
 import { StarIcon, PhoneIcon, MessageIcon } from './icons';
 import AnimatedMapPlaceholder from './AnimatedMapPlaceholder';
 import { formatCurrency } from '../utils/formatting';
+import { usePlatform } from '../hooks/usePlatform';
 
 interface TripScreenProps {
   driver: Driver;
@@ -21,6 +22,7 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showCallModal, setShowCallModal] = useState(false);
   const [showMessageModal, setShowMessageModal] = useState(false);
+  const platform = usePlatform();
 
   useEffect(() => {
     let currentEta = driver.eta;
@@ -54,6 +56,15 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
     setShowCancelModal(false);
     onTripCancel();
   };
+  
+  const modalContainerClasses = platform === 'ios' 
+    ? "absolute inset-0 bg-black/60 flex items-end z-50"
+    : "absolute inset-0 bg-black/60 flex items-center justify-center p-4 z-50";
+
+  const modalContentClasses = platform === 'ios'
+    ? "bg-gray-800 rounded-t-lg p-6 text-center space-y-4 w-full"
+    : "bg-gray-800 rounded-lg p-6 text-center space-y-4";
+
 
   return (
     <div className="flex-1 flex flex-col bg-gray-900">
@@ -113,8 +124,8 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
 
         {/* Modals */}
         {showCancelModal && (
-            <div className="absolute inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
-                <div className="bg-gray-800 rounded-lg p-6 text-center space-y-4">
+            <div className={modalContainerClasses}>
+                <div className={modalContentClasses}>
                     <h3 className="text-lg font-bold">Are you sure?</h3>
                     <p className="text-gray-400">A cancellation fee may apply if your driver is already on the way.</p>
                     <div className="flex space-x-4">

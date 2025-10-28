@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeftIcon } from './icons';
+import React, { useState } from 'react';
 import { User } from '../types';
+import PageHeader from './PageHeader';
 
 interface EditProfileScreenProps {
   user: User;
@@ -28,12 +28,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ user, onBack, onS
 
   return (
     <div className="flex-1 flex flex-col bg-gray-900 animate-fadeIn">
-      <header className="flex items-center p-4 border-b border-gray-700">
-        <button onClick={onBack} className="p-2 rounded-full hover:bg-gray-800">
-          <ArrowLeftIcon className="w-6 h-6 text-white" />
-        </button>
-        <h1 className="text-xl font-bold text-white flex-1 text-center mr-8">Edit Profile</h1>
-      </header>
+      <PageHeader title="Edit Profile" onBack={onBack} />
       <main className="flex-1 p-6">
         <form onSubmit={handleSave} className="space-y-6">
             <div className="flex flex-col items-center">
