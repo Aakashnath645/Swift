@@ -30,6 +30,7 @@ const App: React.FC = () => {
   const [dropoffLocation, setDropoffLocation] = useState<Location | null>(null);
   const [selectedRide, setSelectedRide] = useState<RideOption | null>(null);
   const [driver, setDriver] = useState<Driver | null>(null);
+  const [fare, setFare] = useState<number | null>(null);
 
   useEffect(() => {
     if (screen === Screen.SPLASH) {
@@ -63,6 +64,7 @@ const App: React.FC = () => {
     setDropoffLocation(null);
     setSelectedRide(null);
     setDriver(null);
+    setFare(null);
     setUser(mockUser); // Reset user
   }, []);
 
@@ -85,22 +87,32 @@ const App: React.FC = () => {
     setScreen(Screen.SELECTING_RIDE);
   }, []);
 
-  const handleRideSelected = useCallback((ride: RideOption) => {
+  const handleRideSelected = useCallback((ride: RideOption, calculatedFare: number) => {
     setSelectedRide(ride);
+    setFare(calculatedFare);
     setTimeout(() => {
         setDriver(mockDriver);
         setScreen(Screen.ON_TRIP);
     }, 3000);
   }, []);
   
+  const resetRideState = useCallback(() => {
+    setScreen(Screen.HOME);
+    setPage(Page.HOME);
+    setPickupLocation(null);
+    setDropoffLocation(null);
+    setSelectedRide(null);
+    setDriver(null);
+    setFare(null);
+  }, [])
+
   const handleTripEnd = useCallback(() => {
-      setScreen(Screen.HOME);
-      setPage(Page.HOME);
-      setPickupLocation(null);
-      setDropoffLocation(null);
-      setSelectedRide(null);
-      setDriver(null);
-  }, []);
+      resetRideState();
+  }, [resetRideState]);
+
+  const handleTripCancel = useCallback(() => {
+    resetRideState();
+  }, [resetRideState]);
   
   const handleCancelSearch = useCallback(() => {
     setScreen(Screen.HOME);
@@ -160,19 +172,22 @@ const App: React.FC = () => {
                 pickup={pickupLocation}
                 dropoff={dropoffLocation}
                 rideOptions={rideOptions}
+                driver={mockDriver}
                 onRideSelected={handleRideSelected} 
                 onCancel={handleCancelSearch}
             />;
         }
         return <SplashScreen />; // Fallback
       case Screen.ON_TRIP:
-        if (driver && selectedRide && pickupLocation && dropoffLocation) {
+        if (driver && selectedRide && pickupLocation && dropoffLocation && fare) {
             return <TripScreen 
                 driver={driver} 
                 ride={selectedRide}
                 pickup={pickupLocation}
                 dropoff={dropoffLocation}
+                fare={fare}
                 onTripEnd={handleTripEnd}
+                onTripCancel={handleTripCancel}
             />;
         }
         return <SplashScreen />; // Fallback

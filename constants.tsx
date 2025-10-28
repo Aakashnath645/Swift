@@ -36,6 +36,8 @@ export const mockDriver: Driver = {
   licensePlate: '5XYZ123',
   avatarUrl: 'https://picsum.photos/id/1005/200/200',
   eta: 3,
+  totalTrips: 1245,
+  memberSince: '2021',
 };
 
 export const mockUser: User = {

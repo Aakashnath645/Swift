@@ -41,6 +41,8 @@ export interface Driver {
   licensePlate: string;
   avatarUrl: string;
   eta: number; // in minutes
+  totalTrips: number;
+  memberSince: string;
 }
 
 export interface User {
