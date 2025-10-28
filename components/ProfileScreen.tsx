@@ -13,9 +13,19 @@ const mockUser = {
 
 interface ProfileScreenProps {
   onLogout: () => void;
+  onNavigateToEditProfile: () => void;
+  onNavigateToPayments: () => void;
+  onNavigateToSettings: () => void;
+  onNavigateToHelp: () => void;
 }
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({ onLogout }) => {
+const ProfileScreen: React.FC<ProfileScreenProps> = ({ 
+    onLogout, 
+    onNavigateToEditProfile,
+    onNavigateToPayments,
+    onNavigateToSettings,
+    onNavigateToHelp
+}) => {
   return (
     <div className="h-full flex flex-col bg-gray-900 text-white p-6 space-y-8">
       {/* Profile Header */}
@@ -42,10 +52,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ onLogout }) => {
       {/* Menu Options */}
       <div className="flex-1 flex flex-col justify-between">
         <div className="space-y-2">
-            <ProfileMenuItem icon={<PersonIcon className="w-6 h-6 text-gray-400" />} label="Edit Profile" />
-            <ProfileMenuItem icon={<CreditCardIcon className="w-6 h-6 text-gray-400" />} label="Payment Methods" />
-            <ProfileMenuItem icon={<SettingsIcon className="w-6 h-6 text-gray-400" />} label="Settings" />
-            <ProfileMenuItem icon={<HelpCircleIcon className="w-6 h-6 text-gray-400" />} label="Help & Support" />
+            <ProfileMenuItem icon={<PersonIcon className="w-6 h-6 text-gray-400" />} label="Edit Profile" onClick={onNavigateToEditProfile} />
+            <ProfileMenuItem icon={<CreditCardIcon className="w-6 h-6 text-gray-400" />} label="Payment Methods" onClick={onNavigateToPayments} />
+            <ProfileMenuItem icon={<SettingsIcon className="w-6 h-6 text-gray-400" />} label="Settings" onClick={onNavigateToSettings} />
+            <ProfileMenuItem icon={<HelpCircleIcon className="w-6 h-6 text-gray-400" />} label="Help & Support" onClick={onNavigateToHelp} />
         </div>
 
         {/* Logout Button */}
@@ -61,8 +71,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ onLogout }) => {
   );
 };
 
-const ProfileMenuItem: React.FC<{ icon: React.ReactNode, label: string }> = ({ icon, label }) => (
-    <button className="w-full flex items-center justify-between p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
+interface ProfileMenuItemProps {
+    icon: React.ReactNode;
+    label: string;
+    onClick: () => void;
+}
+
+const ProfileMenuItem: React.FC<ProfileMenuItemProps> = ({ icon, label, onClick }) => (
+    <button onClick={onClick} className="w-full flex items-center justify-between p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors">
         <div className="flex items-center space-x-4">
             {icon}
             <span className="text-lg">{label}</span>

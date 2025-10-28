@@ -6,7 +6,11 @@ export enum Screen {
   SIGNUP,
   HOME, // Represents the main app view with the navigation bar
   SELECTING_RIDE,
-  ON_TRIP
+  ON_TRIP,
+  EDIT_PROFILE,
+  PAYMENT_METHODS,
+  SETTINGS,
+  HELP
 }
 
 export enum Page {
@@ -45,7 +49,7 @@ export interface GroundingChunk {
     title: string;
     placeAnswerSources?: {
       reviewSnippets: {
-        uri: string;
+        uri:string;
         text: string;
         author: string;
       }[];

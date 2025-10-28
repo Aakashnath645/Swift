@@ -10,6 +10,11 @@ import BottomNavBar from './components/BottomNavBar';
 import RideSelectionScreen from './components/RideSelectionScreen';
 import TripScreen from './components/TripScreen';
 import { rideOptions, mockDriver } from './constants';
+import EditProfileScreen from './components/EditProfileScreen';
+import PaymentMethodsScreen from './components/PaymentMethodsScreen';
+import SettingsScreen from './components/SettingsScreen';
+import HelpScreen from './components/HelpScreen';
+
 
 const App: React.FC = () => {
   const [screen, setScreen] = useState<Screen>(Screen.SPLASH);
@@ -83,6 +88,15 @@ const App: React.FC = () => {
     setPickupLocation(null);
     setDropoffLocation(null);
   }, []);
+  
+  const handleReturnToProfile = useCallback(() => {
+    setScreen(Screen.HOME);
+    setPage(Page.PROFILE);
+  }, []);
+  
+  const handleNavigateTo = useCallback((newScreen: Screen) => {
+      setScreen(newScreen);
+  }, []);
 
   const renderMainPage = () => {
     switch (page) {
@@ -91,7 +105,13 @@ const App: React.FC = () => {
         case Page.ACTIVITY:
             return <ActivityScreen />;
         case Page.PROFILE:
-            return <ProfileScreen onLogout={handleLogout} />;
+            return <ProfileScreen 
+                onLogout={handleLogout} 
+                onNavigateToEditProfile={() => handleNavigateTo(Screen.EDIT_PROFILE)}
+                onNavigateToPayments={() => handleNavigateTo(Screen.PAYMENT_METHODS)}
+                onNavigateToSettings={() => handleNavigateTo(Screen.SETTINGS)}
+                onNavigateToHelp={() => handleNavigateTo(Screen.HELP)}
+            />;
         default:
             return <HomeScreen onLocationsSet={handleLocationsSet} />;
     }
@@ -135,6 +155,14 @@ const App: React.FC = () => {
             />;
         }
         return <SplashScreen />; // Fallback
+      case Screen.EDIT_PROFILE:
+        return <EditProfileScreen onBack={handleReturnToProfile} />;
+      case Screen.PAYMENT_METHODS:
+        return <PaymentMethodsScreen onBack={handleReturnToProfile} />;
+      case Screen.SETTINGS:
+        return <SettingsScreen onBack={handleReturnToProfile} />;
+      case Screen.HELP:
+        return <HelpScreen onBack={handleReturnToProfile} />;
       default:
         return <SplashScreen />;
     }

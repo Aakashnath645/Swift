@@ -65,6 +65,13 @@ export const ArrowRightIcon: React.FC<IconProps> = (props) => (
     </svg>
 );
 
+export const ArrowLeftIcon: React.FC<IconProps> = (props) => (
+    <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 12H5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M12 19L5 12L12 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
 export const StarIcon: React.FC<IconProps> = (props) => (
     <svg {...props} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z"/>
@@ -96,7 +103,7 @@ export const SettingsIcon: React.FC<IconProps> = (props) => (
     <path d="M19.435 12.0001C19.435 11.2331 19.349 10.4741 19.182 9.73913M19.182 9.73913C18.999 8.94813 18.558 8.22313 17.913 7.66213C17.268 7.10113 16.45 6.74913 15.565 6.65713" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     <path d="M12 15.25C13.7949 15.25 15.25 13.7949 15.25 12C15.25 10.2051 13.7949 8.75 12 8.75C10.2051 8.75 8.75 10.2051 8.75 12C8.75 13.7949 10.2051 15.25 12 15.25Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     <path d="M4.81802 14.261C4.65102 13.526 4.56502 12.767 4.56502 12C4.56502 11.233 4.65102 10.474 4.81802 9.73898M4.81802 9.73898C5.00102 8.94798 5.44202 8.22298 6.08702 7.66198C6.73202 7.10098 7.55002 6.74898 8.43502 6.65698" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M14.261 19.182C13.526 19.349 12.767 19.435 12 19.435C11.233 19.435 10.474 19.349 9.73898 19.182M9.73898 19.182C8.94798 18.999 8.22298 18.558 7.66198 17.913C7.10098 17.268 6.74898 16.45 6.65698 15.565" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M14.261 19.182C13.526 19.349 12.767 19.435 12 19.435C11.233 19.435 10.474 19.349 9.73898 19.182M9.73898 19.182C8.94798 18.999 8.22298 18.558 7.66198 17.913C7.10098 17.268 6.74898 16.45 6.65698 15.565" stroke="currentColor" strokeWidth="1.s5" strokeLinecap="round" strokeLinejoin="round"/>
     <path d="M17.343 6.65698C16.45 6.74898 15.725 6.30798 15.164 5.66298C14.603 5.01798 14.251 4.19998 14.159 3.31498C14.067 2.42998 14.508 1.50498 15.153 0.85998" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
 </svg>
 );
