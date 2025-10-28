@@ -1,19 +1,12 @@
 const getCurrencyForLocale = (): string => {
-    const locale = navigator.language;
-
-    if (locale.startsWith('en-GB')) return 'GBP';
-    if (locale.startsWith('en-IN')) return 'INR';
-    if (locale.startsWith('ja')) return 'JPY';
-    if (locale.startsWith('de') || locale.startsWith('fr') || locale.startsWith('es')) return 'EUR';
-    
-    // Default to USD for other locales like en-US
-    return 'USD';
+    // Forcing INR as per user request.
+    return 'INR';
 };
 
 export const formatCurrency = (amount: number): string => {
     const currency = getCurrencyForLocale();
     try {
-        return new Intl.NumberFormat(navigator.language, {
+        return new Intl.NumberFormat('en-IN', { // Using en-IN locale for correct formatting
             style: 'currency',
             currency: currency,
         }).format(amount);
@@ -26,7 +19,7 @@ export const formatCurrency = (amount: number): string => {
             'INR': '₹',
             'JPY': '¥',
             'EUR': '€',
-        }[currency] || '$';
+        }[currency] || '₹';
         return `${symbol}${amount.toFixed(2)}`;
     }
 };

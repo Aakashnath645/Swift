@@ -5,6 +5,7 @@ export enum Screen {
   LOGIN,
   SIGNUP,
   HOME, // Represents the main app view with the navigation bar
+  SETTING_LOCATION,
   SELECTING_RIDE,
   ON_TRIP,
   EDIT_PROFILE,

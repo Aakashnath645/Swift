@@ -14,6 +14,7 @@ import EditProfileScreen from './components/EditProfileScreen';
 import PaymentMethodsScreen from './components/PaymentMethodsScreen';
 import SettingsScreen from './components/SettingsScreen';
 import HelpScreen from './components/HelpScreen';
+import SetLocationScreen from './components/SetLocationScreen';
 
 
 const App: React.FC = () => {
@@ -81,6 +82,9 @@ const App: React.FC = () => {
     setAppSettings(updatedSettings);
   }, []);
 
+  const handleNavigateToSetLocation = useCallback(() => {
+    setScreen(Screen.SETTING_LOCATION);
+  }, []);
 
   const handleLocationsSet = useCallback((pickup: Location, dropoff: Location) => {
     setPickupLocation(pickup);
@@ -145,7 +149,7 @@ const App: React.FC = () => {
   const renderMainPage = () => {
     switch (page) {
         case Page.HOME:
-            return <HomeScreen onLocationsSet={handleLocationsSet} />;
+            return <HomeScreen user={user} onNavigateToSetLocation={handleNavigateToSetLocation} />;
         case Page.ACTIVITY:
             return <ActivityScreen tripHistory={tripHistory} />;
         case Page.PROFILE:
@@ -158,7 +162,7 @@ const App: React.FC = () => {
                 onNavigateToHelp={() => handleNavigateTo(Screen.HELP)}
             />;
         default:
-            return <HomeScreen onLocationsSet={handleLocationsSet} />;
+            return <HomeScreen user={user} onNavigateToSetLocation={handleNavigateToSetLocation} />;
     }
   }
 
@@ -178,6 +182,8 @@ const App: React.FC = () => {
                 <BottomNavBar activePage={page} onNavigate={setPage} />
             </div>
         );
+      case Screen.SETTING_LOCATION:
+        return <SetLocationScreen onLocationsSet={handleLocationsSet} onBack={handleCancelSearch} />;
       case Screen.SELECTING_RIDE:
         if (pickupLocation && dropoffLocation) {
             return <RideSelectionScreen 
