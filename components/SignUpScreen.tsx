@@ -25,20 +25,20 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onSwitchToLogin }
   };
 
   const inputClasses = platform === 'ios' 
-    ? "w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white"
-    : "w-full px-4 py-3 bg-gray-800 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500 text-white transition-colors";
+    ? "w-full px-4 py-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-black dark:text-white"
+    : "w-full px-4 py-3 bg-gray-100 dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500 text-black dark:text-white transition-colors";
   
   const buttonClasses = platform === 'ios'
-    ? "w-full py-3 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold transition-colors disabled:bg-gray-500 flex items-center justify-center"
-    : "w-full py-3 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold transition-colors disabled:bg-gray-500 flex items-center justify-center shadow-lg";
+    ? "w-full py-3 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold transition-colors disabled:bg-gray-400 dark:disabled:bg-gray-500 flex items-center justify-center text-white"
+    : "w-full py-3 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold transition-colors disabled:bg-gray-400 dark:disabled:bg-gray-500 flex items-center justify-center shadow-lg text-white";
 
   return (
-    <div className="flex-1 flex flex-col justify-between p-6 bg-gray-900 animate-fadeIn">
+    <div className="flex-1 flex flex-col justify-between p-6 bg-white dark:bg-gray-900 animate-fadeIn">
         <div className="flex-1 flex flex-col justify-center">
             <div className="text-center mb-12">
-                <Logo className="w-12 h-12 text-cyan-400 mx-auto" />
+                <Logo className="w-12 h-12 text-cyan-500 dark:text-cyan-400 mx-auto" />
                 <h1 className="text-4xl font-bold mt-4">Create Account</h1>
-                <p className="text-gray-400 mt-2">Get started with Swift</p>
+                <p className="text-gray-500 dark:text-gray-400 mt-2">Get started with Swift</p>
             </div>
             <form onSubmit={handleSignUpClick} className="space-y-4">
                  <input
@@ -78,8 +78,8 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onSwitchToLogin }
                 </button>
             </form>
         </div>
-        <div className="text-center text-gray-500">
-            <p>Already have an account? <button onClick={onSwitchToLogin} className="text-cyan-400 font-medium bg-transparent border-none p-0 cursor-pointer hover:underline focus:outline-none">Sign in</button></p>
+        <div className="text-center text-gray-500 dark:text-gray-500">
+            <p>Already have an account? <button onClick={onSwitchToLogin} className="text-cyan-600 dark:text-cyan-400 font-medium bg-transparent border-none p-0 cursor-pointer hover:underline focus:outline-none">Sign in</button></p>
         </div>
     </div>
   );

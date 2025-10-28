@@ -58,7 +58,7 @@ const SetLocationScreen: React.FC<SetLocationScreenProps> = ({ onBack, onLocatio
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-gray-900 animate-fadeIn">
+    <div className="flex-1 flex flex-col bg-white dark:bg-gray-900 animate-fadeIn">
       <PageHeader title="Set your route" onBack={onBack} />
       <main className="flex-1 p-6 flex flex-col">
         <div className="space-y-4">
@@ -69,43 +69,43 @@ const SetLocationScreen: React.FC<SetLocationScreenProps> = ({ onBack, onLocatio
               placeholder="Pickup location"
               value={pickup}
               onChange={(e) => setPickup(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-gray-800 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500 text-white"
+              className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500 text-black dark:text-white"
             />
           </div>
           <div className="relative">
-            <LocationMarkerIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-400" />
+            <LocationMarkerIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-600 dark:text-cyan-400" />
             <input
               type="text"
               placeholder="Where are you going?"
               value={dropoff}
               onChange={(e) => setDropoff(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-gray-800 border-2 border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500 text-white"
+              className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500 text-black dark:text-white"
             />
           </div>
         </div>
         
         <div className="mt-6 flex-1 overflow-y-auto">
-            <h3 className="text-lg font-semibold text-gray-300 mb-2">Suggestions</h3>
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Suggestions</h3>
             {isLoading && (
                 <div className="flex justify-center items-center py-8">
-                    <div className="w-8 h-8 border-2 border-t-transparent border-cyan-400 rounded-full animate-spin"></div>
+                    <div className="w-8 h-8 border-2 border-t-transparent border-cyan-500 dark:border-cyan-400 rounded-full animate-spin"></div>
                 </div>
             )}
-            {error && <p className="text-center text-red-400">{error}</p>}
+            {error && <p className="text-center text-red-500 dark:text-red-400">{error}</p>}
             {!isLoading && !error && suggestions.length === 0 && (
-                 <p className="text-center text-gray-500">No suggestions found nearby.</p>
+                 <p className="text-center text-gray-400 dark:text-gray-500">No suggestions found nearby.</p>
             )}
             <div className="space-y-2">
                 {suggestions.map((chunk, index) => chunk.maps?.title && (
                     <button 
                         key={`${chunk.maps.uri}-${index}`}
                         onClick={() => setDropoff(chunk.maps!.title)}
-                        className="w-full text-left flex items-center p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+                        className="w-full text-left flex items-center p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                     >
-                        <div className="p-2 bg-gray-700 rounded-full mr-4">
-                           <MapPinIcon className="w-5 h-5 text-gray-400"/>
+                        <div className="p-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-4">
+                           <MapPinIcon className="w-5 h-5 text-gray-500 dark:text-gray-400"/>
                         </div>
-                        <span className="text-white">{chunk.maps.title}</span>
+                        <span className="text-black dark:text-white">{chunk.maps.title}</span>
                     </button>
                 ))}
             </div>
@@ -115,7 +115,7 @@ const SetLocationScreen: React.FC<SetLocationScreenProps> = ({ onBack, onLocatio
             <button
                 onClick={handleConfirm}
                 disabled={!pickup || !dropoff}
-                className="w-full py-4 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold transition-colors disabled:bg-gray-700 disabled:text-gray-400 text-lg"
+                className="w-full py-4 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold text-white transition-colors disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 text-lg"
                 >
                 Confirm Locations
             </button>

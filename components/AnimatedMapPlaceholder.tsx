@@ -29,14 +29,14 @@ const AnimatedMapPlaceholder: React.FC<AnimatedMapPlaceholderProps> = ({ status,
 
   if (status === 'trip') {
     return (
-      <div className="h-full bg-gray-800 flex flex-col items-center justify-center text-gray-400 font-mono p-4 overflow-hidden">
+      <div className="h-full bg-gray-200 dark:bg-gray-800 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 font-mono p-4 overflow-hidden">
         <div className="w-full max-w-sm text-center">
             <div className="flex items-center justify-between text-lg mb-2">
-                <CarIcon className="w-8 h-8 text-cyan-400" />
-                <div className="flex-1 h-0.5 bg-gray-600 mx-4 relative overflow-hidden">
-                    <div className="absolute h-full bg-cyan-400 w-1/2 animate-dash"></div>
+                <CarIcon className="w-8 h-8 text-cyan-600 dark:text-cyan-400" />
+                <div className="flex-1 h-0.5 bg-gray-300 dark:bg-gray-600 mx-4 relative overflow-hidden">
+                    <div className="absolute h-full bg-cyan-500 dark:bg-cyan-400 w-1/2 animate-dash"></div>
                 </div>
-                <LocationMarkerIcon className="w-8 h-8 text-purple-400" />
+                <LocationMarkerIcon className="w-8 h-8 text-purple-500 dark:text-purple-400" />
             </div>
             {eta !== undefined && eta > 0 && (
                  <p className="text-xl animate-pulse">Arriving in {eta} min...</p>
@@ -60,13 +60,14 @@ const AnimatedMapPlaceholder: React.FC<AnimatedMapPlaceholderProps> = ({ status,
 
   // Idle status
   return (
-    <div className="h-full bg-gray-800 relative overflow-hidden flex items-center justify-center">
-      <div className="absolute inset-0 z-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #4A5568 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+    <div className="h-full bg-gray-200 dark:bg-gray-800 relative overflow-hidden flex items-center justify-center">
+      <div className="absolute inset-0 z-0 opacity-20 dark:opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #A0AEC0 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+      <div className="dark:hidden absolute inset-0 z-0 opacity-40" style={{ backgroundImage: 'radial-gradient(circle, #CBD5E0 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
       <div className="relative z-10 text-center">
         <div className="animate-subtle-float">
           <Logo className="w-40 h-40 text-cyan-500 opacity-50 mx-auto" />
         </div>
-        <p key={phraseIndex} className="text-white/70 text-2xl font-bold mt-8 animate-fade-in-out">
+        <p key={phraseIndex} className="text-black/70 dark:text-white/70 text-2xl font-bold mt-8 animate-fade-in-out">
           {catchphrases[phraseIndex]}
         </p>
       </div>

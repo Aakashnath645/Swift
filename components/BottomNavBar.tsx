@@ -17,8 +17,8 @@ const navItems = [
 const BottomNavBar: React.FC<BottomNavBarProps> = ({ activePage, onNavigate }) => {
   const platform = usePlatform();
   const navBarClass = platform === 'ios'
-      ? 'bg-gray-800/80 backdrop-blur-sm border-t border-gray-700/50'
-      : 'bg-gray-800 border-t border-gray-700 shadow-lg';
+      ? 'bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-200/50 dark:border-gray-700/50'
+      : 'bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg';
 
   return (
     <nav className={`flex justify-around items-center ${navBarClass} py-2`} aria-label="Main navigation">
@@ -30,7 +30,7 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ activePage, onNavigate }) =
             onClick={() => onNavigate(item.page)}
             aria-current={isActive ? 'page' : undefined}
             className={`flex flex-col items-center justify-center w-1/3 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-500 rounded-md py-1 ${
-              isActive ? 'text-cyan-400' : 'text-gray-500 hover:text-gray-300'
+              isActive ? 'text-cyan-600 dark:text-cyan-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300'
             }`}
           >
             <item.icon className="w-6 h-6 mb-1" />

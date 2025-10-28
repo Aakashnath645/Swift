@@ -20,6 +20,8 @@ export enum Page {
     PROFILE,
 }
 
+export type Theme = 'light' | 'dark';
+
 export interface Location {
   address: string;
   lat?: number;

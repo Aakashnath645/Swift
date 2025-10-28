@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Screen, Page, RideOption, Driver, Location, User, PaymentMethod, AppSettings, TripRecord } from './types';
+import { Screen, Page, RideOption, Driver, Location, User, PaymentMethod, AppSettings, TripRecord, Theme } from './types';
 import SplashScreen from './components/SplashScreen';
 import LoginScreen from './components/LoginScreen';
 import SignUpScreen from './components/SignUpScreen';
@@ -26,6 +26,7 @@ const App: React.FC = () => {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(initialPaymentMethods);
   const [appSettings, setAppSettings] = useState<AppSettings>(initialAppSettings);
   const [tripHistory, setTripHistory] = useState<TripRecord[]>([]);
+  const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem('theme') as Theme) || 'light');
   
   // Ride flow state
   const [pickupLocation, setPickupLocation] = useState<Location | null>(null);
@@ -36,11 +37,23 @@ const App: React.FC = () => {
   const [eta, setEta] = useState<number | null>(null);
 
   useEffect(() => {
+    // This effect ensures the class on the root element matches the theme state.
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  useEffect(() => {
     if (screen === Screen.SPLASH) {
       const timer = setTimeout(() => setScreen(Screen.LOGIN), 2500);
       return () => clearTimeout(timer);
     }
   }, [screen]);
+
+  const handleThemeToggle = useCallback(() => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  }, []);
 
   const handleLogin = useCallback(() => {
     setScreen(Screen.HOME);
@@ -221,7 +234,7 @@ const App: React.FC = () => {
       case Screen.PAYMENT_METHODS:
         return <PaymentMethodsScreen paymentMethods={paymentMethods} onUpdate={handlePaymentMethodsUpdate} onBack={handleReturnToProfile} />;
       case Screen.SETTINGS:
-        return <SettingsScreen settings={appSettings} onUpdate={handleSettingsUpdate} onBack={handleReturnToProfile} />;
+        return <SettingsScreen settings={appSettings} onUpdate={handleSettingsUpdate} onBack={handleReturnToProfile} theme={theme} onThemeToggle={handleThemeToggle} />;
       case Screen.HELP:
         return <HelpScreen onBack={handleReturnToProfile} />;
       default:
@@ -230,7 +243,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-900 text-white font-sans">
+    <div className="w-full min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-sans">
       <div className="max-w-md mx-auto h-screen flex flex-col">
           {renderScreen()}
       </div>

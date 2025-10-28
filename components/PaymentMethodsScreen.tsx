@@ -25,27 +25,27 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenProps> = ({ paymentMeth
   };
   
   return (
-    <div className="flex-1 flex flex-col bg-gray-900 animate-fadeIn">
+    <div className="flex-1 flex flex-col bg-white dark:bg-gray-900 animate-fadeIn">
       <PageHeader title="Payment Methods" onBack={onBack} />
       <main className="flex-1 p-6 flex flex-col justify-between">
         <div className="space-y-4">
             {paymentMethods.length > 0 ? (
                 paymentMethods.map(method => (
-                    <div key={method.id} className="p-4 bg-gray-800 rounded-lg flex items-center justify-between">
+                    <div key={method.id} className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-between">
                         <div className="flex items-center space-x-4">
-                            <CreditCardIcon className="w-8 h-8 text-cyan-400"/>
+                            <CreditCardIcon className="w-8 h-8 text-cyan-600 dark:text-cyan-400"/>
                             <div>
                                 <p className="font-semibold capitalize">{method.type}</p>
-                                <p className="text-gray-400">**** **** **** {method.last4}</p>
+                                <p className="text-gray-500 dark:text-gray-400">**** **** **** {method.last4}</p>
                             </div>
                         </div>
-                        <button onClick={() => handleRemoveMethod(method.id)} className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded-full">
+                        <button onClick={() => handleRemoveMethod(method.id)} className="p-2 text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-500/10 dark:hover:bg-red-500/20 rounded-full">
                             <TrashIcon className="w-6 h-6" />
                         </button>
                     </div>
                 ))
             ) : (
-                <div className="text-center text-gray-500 py-10">
+                <div className="text-center text-gray-400 dark:text-gray-500 py-10">
                     <CreditCardIcon className="w-12 h-12 mx-auto mb-2"/>
                     <p>No payment methods saved.</p>
                 </div>
@@ -53,7 +53,7 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenProps> = ({ paymentMeth
         </div>
         <button
             onClick={handleAddMethod}
-            className="w-full py-3 mt-4 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold transition-colors"
+            className="w-full py-3 mt-4 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold text-white transition-colors"
         >
             Add New Card
         </button>
