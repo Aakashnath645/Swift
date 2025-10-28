@@ -68,6 +68,7 @@ const App: React.FC = () => {
     setDriver(null);
     setFare(null);
     setUser(mockUser); // Reset user
+    setTripHistory([]); // Clear ride history on logout
   }, []);
 
   const handleProfileUpdate = useCallback((updatedUser: User) => {
@@ -114,7 +115,7 @@ const App: React.FC = () => {
   const handleTripEnd = useCallback(() => {
     if (pickupLocation && dropoffLocation && selectedRide && fare) {
         const newTrip: TripRecord = {
-            id: new Date().toISOString(),
+            id: `${new Date().toISOString()}-${Math.random()}`, // Ensure unique ID
             pickup: pickupLocation,
             dropoff: dropoffLocation,
             fare: fare,
