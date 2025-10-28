@@ -64,7 +64,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onLocationsSet }) => {
   };
   
   return (
-    <div className="flex-1 flex flex-col bg-gray-900">
+    <div className="h-full flex flex-col bg-gray-900">
         <div className="h-3/5">
             <AnimatedMapPlaceholder status="idle" />
         </div>

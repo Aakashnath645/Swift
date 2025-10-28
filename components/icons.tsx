@@ -77,3 +77,42 @@ export const PhoneIcon: React.FC<IconProps> = (props) => (
         <path d="M14.5 9.644C16.5 11.644 15.644 14.5 12.644 14.5C9.644 14.5 9.5 12.5 10.356 10.356" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
 );
+
+export const ChevronRightIcon: React.FC<IconProps> = (props) => (
+    <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+export const CreditCardIcon: React.FC<IconProps> = (props) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M3 10H21" stroke="currentColor" strokeWidth="1.5"/>
+  </svg>
+);
+
+export const SettingsIcon: React.FC<IconProps> = (props) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M19.435 12.0001C19.435 11.2331 19.349 10.4741 19.182 9.73913M19.182 9.73913C18.999 8.94813 18.558 8.22313 17.913 7.66213C17.268 7.10113 16.45 6.74913 15.565 6.65713" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 15.25C13.7949 15.25 15.25 13.7949 15.25 12C15.25 10.2051 13.7949 8.75 12 8.75C10.2051 8.75 8.75 10.2051 8.75 12C8.75 13.7949 10.2051 15.25 12 15.25Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M4.81802 14.261C4.65102 13.526 4.56502 12.767 4.56502 12C4.56502 11.233 4.65102 10.474 4.81802 9.73898M4.81802 9.73898C5.00102 8.94798 5.44202 8.22298 6.08702 7.66198C6.73202 7.10098 7.55002 6.74898 8.43502 6.65698" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M14.261 19.182C13.526 19.349 12.767 19.435 12 19.435C11.233 19.435 10.474 19.349 9.73898 19.182M9.73898 19.182C8.94798 18.999 8.22298 18.558 7.66198 17.913C7.10098 17.268 6.74898 16.45 6.65698 15.565" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M17.343 6.65698C16.45 6.74898 15.725 6.30798 15.164 5.66298C14.603 5.01798 14.251 4.19998 14.159 3.31498C14.067 2.42998 14.508 1.50498 15.153 0.85998" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
+);
+
+export const HelpCircleIcon: React.FC<IconProps> = (props) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M9.09 9C9.3251 8.33167 9.78915 7.76811 10.4 7.40913C11.0108 7.05016 11.7289 6.91894 12.4272 7.03871C13.1255 7.15849 13.7588 7.52152 14.2222 8.06354C14.6856 8.60556 14.95 9.29155 14.99 10C15 11 14 12 12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 17H12.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+export const LogOutIcon: React.FC<IconProps> = (props) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M16 17L21 12L16 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M21 12H9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);

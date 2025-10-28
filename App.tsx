@@ -44,6 +44,15 @@ const App: React.FC = () => {
     setScreen(Screen.LOGIN);
   }, []);
 
+  const handleLogout = useCallback(() => {
+    setScreen(Screen.LOGIN);
+    setPage(Page.HOME);
+    setPickupLocation(null);
+    setDropoffLocation(null);
+    setSelectedRide(null);
+    setDriver(null);
+  }, []);
+
 
   const handleLocationsSet = useCallback((pickup: Location, dropoff: Location) => {
     setPickupLocation(pickup);
@@ -82,7 +91,7 @@ const App: React.FC = () => {
         case Page.ACTIVITY:
             return <ActivityScreen />;
         case Page.PROFILE:
-            return <ProfileScreen />;
+            return <ProfileScreen onLogout={handleLogout} />;
         default:
             return <HomeScreen onLocationsSet={handleLocationsSet} />;
     }
