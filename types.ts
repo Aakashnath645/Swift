@@ -16,6 +16,8 @@ export enum Screen {
   PAYMENT,
   RATING,
   LEGAL,
+  SAVED_PLACES,
+  ADD_EDIT_PLACE,
 }
 
 export enum Page {
@@ -85,6 +87,14 @@ export interface TripRecord {
   date: string; // ISO string
   rideName: string;
   driver?: Driver; // Add driver for rating screen purposes
+}
+
+export type SavedPlaceType = 'home' | 'work' | 'pin';
+export interface SavedPlace {
+  id: string;
+  label: string;
+  location: Location;
+  type: SavedPlaceType;
 }
 
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Screen, Page, RideOption, Driver, Location, User, PaymentMethod, AppSettings, TripRecord, Theme } from './types';
+import { Screen, Page, RideOption, Driver, Location, User, PaymentMethod, AppSettings, TripRecord, Theme, SavedPlace } from './types';
 import SplashScreen from './components/SplashScreen';
 import OnboardingScreen from './components/OnboardingScreen';
 import LoginScreen from './components/LoginScreen';
@@ -16,10 +16,11 @@ import EditProfileScreen from './components/EditProfileScreen';
 import PaymentMethodsScreen from './components/PaymentMethodsScreen';
 import SettingsScreen from './components/SettingsScreen';
 import HelpScreen from './components/HelpScreen';
-import SetLocationScreen from './components/SetLocationScreen';
 import PaymentScreen from './components/PaymentScreen';
 import RatingScreen from './components/RatingScreen';
 import LegalScreen from './components/LegalScreen';
+import SavedPlacesScreen from './components/SavedPlacesScreen';
+import AddEditPlaceScreen from './components/AddEditPlaceScreen';
 import * as localStorageService from './services/localStorageService';
 
 
@@ -33,6 +34,7 @@ const App: React.FC = () => {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(initialPaymentMethods);
   const [appSettings, setAppSettings] = useState<AppSettings>(initialAppSettings);
   const [tripHistory, setTripHistory] = useState<TripRecord[]>([]);
+  const [savedPlaces, setSavedPlaces] = useState<SavedPlace[]>([]);
   const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem('theme') as Theme) || 'light');
   
   // Ride flow state
@@ -44,6 +46,7 @@ const App: React.FC = () => {
   const [eta, setEta] = useState<number | null>(null);
   const [completedTrip, setCompletedTrip] = useState<TripRecord | null>(null);
   const [legalContent, setLegalContent] = useState({ title: '', content: '' });
+  const [placeToEdit, setPlaceToEdit] = useState<SavedPlace | undefined>(undefined);
 
 
   useEffect(() => {
@@ -60,6 +63,7 @@ const App: React.FC = () => {
       if (storedUser) {
         setUser(storedUser);
         setTripHistory(localStorageService.getTripHistory());
+        setSavedPlaces(localStorageService.getSavedPlaces());
         setScreen(Screen.HOME);
       } else {
         setScreen(Screen.ONBOARDING);
@@ -80,6 +84,7 @@ const App: React.FC = () => {
   const handleLogin = useCallback(() => {
     const loggedInUser = { ...mockUser, name: 'Alex Doe' }; // Simulate fetching a real user
     setUser(loggedInUser);
+    setSavedPlaces(localStorageService.getSavedPlaces()); // Load places on login
     localStorageService.saveUser(loggedInUser);
     setScreen(Screen.HOME);
     setPage(Page.HOME);
@@ -113,6 +118,7 @@ const App: React.FC = () => {
     localStorageService.clearAllData();
     setUser(mockUser); // Reset to mock user
     setTripHistory([]);
+    setSavedPlaces([]);
     setScreen(Screen.LOGIN);
     setPage(Page.HOME);
     setPickupLocation(null);
@@ -134,10 +140,6 @@ const App: React.FC = () => {
 
   const handleSettingsUpdate = useCallback((updatedSettings: AppSettings) => {
     setAppSettings(updatedSettings);
-  }, []);
-
-  const handleNavigateToSetLocation = useCallback(() => {
-    setScreen(Screen.SETTING_LOCATION);
   }, []);
 
   const handleLocationsSet = useCallback((pickup: Location, dropoff: Location) => {
@@ -207,9 +209,6 @@ const App: React.FC = () => {
         const newTotalRides = user.totalRides + 1;
         let newRating = user.rating;
 
-        // Only update user's rating if a rating was given (not skipped).
-        // In a real app, a driver would rate the user. Here we use the user's rating
-        // of the driver as a proxy for a good trip experience to make it dynamic.
         if (rating > 0) {
             newRating = ((user.rating * user.totalRides) + rating) / newTotalRides;
         }
@@ -256,10 +255,46 @@ const App: React.FC = () => {
     setScreen(Screen.LEGAL);
   }, []);
 
+  const handleSavePlace = useCallback((place: SavedPlace) => {
+    let updatedPlaces;
+    const existingIndex = savedPlaces.findIndex(p => p.id === place.id);
+
+    if (existingIndex > -1) {
+      updatedPlaces = [...savedPlaces];
+      updatedPlaces[existingIndex] = place;
+    } else {
+      updatedPlaces = [...savedPlaces, place];
+    }
+
+    setSavedPlaces(updatedPlaces);
+    localStorageService.saveSavedPlaces(updatedPlaces);
+    setScreen(Screen.SAVED_PLACES);
+  }, [savedPlaces]);
+
+  const handleDeletePlace = useCallback((placeId: string) => {
+    const updatedPlaces = savedPlaces.filter(p => p.id !== placeId);
+    setSavedPlaces(updatedPlaces);
+    localStorageService.saveSavedPlaces(updatedPlaces);
+  }, [savedPlaces]);
+  
+  const handleEditPlace = useCallback((place: SavedPlace) => {
+    setPlaceToEdit(place);
+    setScreen(Screen.ADD_EDIT_PLACE);
+  }, []);
+  
+  const handleAddNewPlace = useCallback(() => {
+    setPlaceToEdit(undefined);
+    setScreen(Screen.ADD_EDIT_PLACE);
+  }, []);
+
   const renderMainPage = () => {
     switch (page) {
         case Page.HOME:
-            return <HomeScreen user={user} onNavigateToSetLocation={handleNavigateToSetLocation} />;
+            return <HomeScreen 
+              user={user} 
+              savedPlaces={savedPlaces}
+              onLocationsSet={handleLocationsSet}
+            />;
         case Page.ACTIVITY:
             return <ActivityScreen tripHistory={tripHistory} />;
         case Page.PROFILE:
@@ -270,9 +305,14 @@ const App: React.FC = () => {
                 onNavigateToPayments={() => handleNavigateTo(Screen.PAYMENT_METHODS)}
                 onNavigateToSettings={() => handleNavigateTo(Screen.SETTINGS)}
                 onNavigateToHelp={() => handleNavigateTo(Screen.HELP)}
+                onNavigateToSavedPlaces={() => handleNavigateTo(Screen.SAVED_PLACES)}
             />;
         default:
-            return <HomeScreen user={user} onNavigateToSetLocation={handleNavigateToSetLocation} />;
+            return <HomeScreen 
+              user={user} 
+              savedPlaces={savedPlaces}
+              onLocationsSet={handleLocationsSet}
+            />;
     }
   }
 
@@ -299,7 +339,13 @@ const App: React.FC = () => {
             </div>
         );
       case Screen.SETTING_LOCATION:
-        return <SetLocationScreen onLocationsSet={handleLocationsSet} onBack={handleCancelSearch} />;
+        // This screen is now merged into HomeScreen, but we keep the case as a fallback.
+        return (
+            <div className="flex-1 flex flex-col overflow-hidden">
+                <main className="flex-1 overflow-y-auto">{renderMainPage()}</main>
+                <BottomNavBar activePage={page} onNavigate={setPage} />
+            </div>
+        );
       case Screen.SELECTING_RIDE:
         if (pickupLocation && dropoffLocation) {
             return <RideSelectionScreen 
@@ -344,7 +390,11 @@ const App: React.FC = () => {
       case Screen.HELP:
         return <HelpScreen onBack={handleReturnToProfile} />;
       case Screen.LEGAL:
-        return <LegalScreen title={legalContent.title} content={legalContent.content} onBack={handleReturnToProfile} />;
+        return <LegalScreen title={legalContent.title} content={legalContent.content} onBack={() => handleNavigateTo(Screen.SETTINGS)} />;
+      case Screen.SAVED_PLACES:
+        return <SavedPlacesScreen savedPlaces={savedPlaces} onAdd={handleAddNewPlace} onEdit={handleEditPlace} onDelete={handleDeletePlace} onBack={handleReturnToProfile} />;
+      case Screen.ADD_EDIT_PLACE:
+        return <AddEditPlaceScreen placeToEdit={placeToEdit} onSave={handleSavePlace} onBack={() => handleNavigateTo(Screen.SAVED_PLACES)} userLocation={pickupLocation || { lat: 37.7749, lng: -122.4194 }} />;
       default:
         return <SplashScreen />;
     }

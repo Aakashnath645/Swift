@@ -1,5 +1,5 @@
 import React from 'react';
-import { PersonIcon, CreditCardIcon, SettingsIcon, HelpCircleIcon, LogOutIcon, ChevronRightIcon } from './icons';
+import { PersonIcon, CreditCardIcon, SettingsIcon, HelpCircleIcon, LogOutIcon, ChevronRightIcon, BookmarkIcon } from './icons';
 import { User } from '../types';
 
 interface ProfileScreenProps {
@@ -9,6 +9,7 @@ interface ProfileScreenProps {
   onNavigateToPayments: () => void;
   onNavigateToSettings: () => void;
   onNavigateToHelp: () => void;
+  onNavigateToSavedPlaces: () => void;
 }
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ 
@@ -17,7 +18,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
     onNavigateToEditProfile,
     onNavigateToPayments,
     onNavigateToSettings,
-    onNavigateToHelp
+    onNavigateToHelp,
+    onNavigateToSavedPlaces,
 }) => {
   return (
     <div className="h-full flex flex-col bg-white dark:bg-gray-900 text-black dark:text-white p-6 lg:p-8">
@@ -50,6 +52,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
         <div className="lg:col-span-3 flex flex-col justify-between mt-8 lg:mt-0">
           <div className="space-y-2">
               <ProfileMenuItem icon={<PersonIcon className="w-6 h-6 text-gray-500 dark:text-gray-400" />} label="Edit Profile" onClick={onNavigateToEditProfile} />
+              <ProfileMenuItem icon={<BookmarkIcon className="w-6 h-6 text-gray-500 dark:text-gray-400" />} label="Saved Places" onClick={onNavigateToSavedPlaces} />
               <ProfileMenuItem icon={<CreditCardIcon className="w-6 h-6 text-gray-500 dark:text-gray-400" />} label="Payment Methods" onClick={onNavigateToPayments} />
               <ProfileMenuItem icon={<SettingsIcon className="w-6 h-6 text-gray-500 dark:text-gray-400" />} label="Settings" onClick={onNavigateToSettings} />
               <ProfileMenuItem icon={<HelpCircleIcon className="w-6 h-6 text-gray-500 dark:text-gray-400" />} label="Help & Support" onClick={onNavigateToHelp} />

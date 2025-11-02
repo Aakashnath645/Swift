@@ -1,7 +1,8 @@
-import { User, TripRecord } from '../types';
+import { User, TripRecord, SavedPlace } from '../types';
 
 const USER_KEY = 'swift_user';
 const TRIP_HISTORY_KEY = 'swift_trip_history';
+const SAVED_PLACES_KEY = 'swift_saved_places';
 
 // --- User Management ---
 
@@ -45,12 +46,34 @@ export const getTripHistory = (): TripRecord[] => {
     }
 }
 
+// --- Saved Places Management ---
+
+export const saveSavedPlaces = (places: SavedPlace[]): void => {
+    try {
+        localStorage.setItem(SAVED_PLACES_KEY, JSON.stringify(places));
+    } catch (error) {
+        console.error("Failed to save places to local storage:", error);
+    }
+};
+
+export const getSavedPlaces = (): SavedPlace[] => {
+    try {
+        const placesJson = localStorage.getItem(SAVED_PLACES_KEY);
+        return placesJson ? JSON.parse(placesJson) : [];
+    } catch (error) {
+        console.error("Failed to get places from local storage:", error);
+        return [];
+    }
+};
+
+
 // --- Data Clearing ---
 
 export const clearAllData = (): void => {
     try {
         localStorage.removeItem(USER_KEY);
         localStorage.removeItem(TRIP_HISTORY_KEY);
+        localStorage.removeItem(SAVED_PLACES_KEY);
     } catch (error) {
         console.error("Failed to clear local storage:", error);
     }

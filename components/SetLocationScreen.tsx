@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Location } from '../types';
-import { LocationMarkerIcon, MapPinIcon } from './icons';
+import { Location, SavedPlace, SavedPlaceType } from '../types';
+import { LocationMarkerIcon, MapPinIcon, HomeOutlineIcon, BriefcaseIcon } from './icons';
 import PageHeader from './PageHeader';
 import { getPlaceSuggestions } from '../services/geminiService';
 
 interface SetLocationScreenProps {
   onBack: () => void;
   onLocationsSet: (pickup: Location, dropoff: Location) => void;
+  savedPlaces: SavedPlace[];
 }
 
-const SetLocationScreen: React.FC<SetLocationScreenProps> = ({ onBack, onLocationsSet }) => {
+const SetLocationScreen: React.FC<SetLocationScreenProps> = ({ onBack, onLocationsSet, savedPlaces }) => {
   const [pickup, setPickup] = useState<Location>({ address: 'Your Current Location', lat: 0, lng: 0});
   const [dropoff, setDropoff] = useState('');
+  const [selectedDropoffLocation, setSelectedDropoffLocation] = useState<Location | null>(null);
+
   const [suggestions, setSuggestions] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -53,12 +56,28 @@ const SetLocationScreen: React.FC<SetLocationScreenProps> = ({ onBack, onLocatio
   }, []);
   
   const handleConfirm = () => {
-    if (pickup.address && dropoff) {
-        // Find the selected suggestion to pass its coords
-        const selectedDropoff = suggestions.find(s => s.address === dropoff) || { address: dropoff, lat: pickup.lat + 0.05, lng: pickup.lng + 0.05 }; // Fallback coords
-        onLocationsSet(pickup, selectedDropoff);
+    if (pickup.address && dropoff && selectedDropoffLocation) {
+        onLocationsSet(pickup, selectedDropoffLocation);
     }
   };
+  
+  const handleSelectSuggestion = (suggestion: Location) => {
+    setDropoff(suggestion.address);
+    setSelectedDropoffLocation(suggestion);
+  };
+  
+  const handleSelectSavedPlace = (place: SavedPlace) => {
+    setDropoff(place.location.address);
+    setSelectedDropoffLocation(place.location);
+  };
+
+  const getIconForPlace = (type: SavedPlaceType) => {
+    switch (type) {
+      case 'home': return <HomeOutlineIcon className="w-6 h-6 text-gray-500 dark:text-gray-400" />;
+      case 'work': return <BriefcaseIcon className="w-6 h-6 text-gray-500 dark:text-gray-400" />;
+      default: return <MapPinIcon className="w-6 h-6 text-gray-500 dark:text-gray-400" />;
+    }
+  }
 
   return (
     <div className="flex-1 flex flex-col bg-white dark:bg-gray-900 animate-fadeIn">
@@ -91,7 +110,28 @@ const SetLocationScreen: React.FC<SetLocationScreenProps> = ({ onBack, onLocatio
           </div>
         </div>
         
-        <div className="mt-8">
+        {savedPlaces.length > 0 && (
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Saved Places</h3>
+            <div className="space-y-2">
+              {savedPlaces.map(place => (
+                <button 
+                  key={place.id}
+                  onClick={() => handleSelectSavedPlace(place)}
+                  className="w-full text-left flex items-center space-x-3 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+                >
+                  <div className="p-2 bg-gray-200 dark:bg-gray-700 rounded-full">{getIconForPlace(place.type)}</div>
+                  <div>
+                    <p className="font-semibold text-black dark:text-white">{place.label}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{place.location.address}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="mt-6">
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Suggestions</h3>
             {isLoading && (
                 <div className="flex justify-center items-center py-8">
@@ -107,7 +147,7 @@ const SetLocationScreen: React.FC<SetLocationScreenProps> = ({ onBack, onLocatio
                   {suggestions.map((suggestion) => (
                       <button 
                           key={suggestion.address}
-                          onClick={() => setDropoff(suggestion.address)}
+                          onClick={() => handleSelectSuggestion(suggestion)}
                           className="w-36 h-36 flex-shrink-0 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors flex flex-col items-center justify-center text-center space-y-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
                       >
                           <div className="p-3 bg-gray-200 dark:bg-gray-700 rounded-full">
@@ -123,7 +163,7 @@ const SetLocationScreen: React.FC<SetLocationScreenProps> = ({ onBack, onLocatio
         <div className="mt-auto pt-4">
             <button
                 onClick={handleConfirm}
-                disabled={!pickup.address || !dropoff}
+                disabled={!pickup.address || !dropoff || !selectedDropoffLocation}
                 className="w-full py-3 bg-cyan-600 text-white rounded-lg font-semibold text-lg border-b-4 border-cyan-700 hover:bg-cyan-500 hover:border-cyan-600 active:border-b-0 active:translate-y-1 transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 dark:focus:ring-offset-gray-900 disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:border-b-4 disabled:border-gray-500 dark:disabled:border-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed disabled:translate-y-0"
                 >
                 Confirm Locations
