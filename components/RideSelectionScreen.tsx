@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import type { RideOption, Location, Driver } from '../types';
-import { ArrowRightIcon, PersonIcon } from './icons';
+import { ArrowRightIcon, PersonIcon, BikeIcon } from './icons';
 import { formatCurrency } from '../utils/formatting';
 import { calculateFare } from '../services/geminiService';
 import { mockDrivers } from '../constants';
@@ -28,9 +28,10 @@ const RideSelectionScreen: React.FC<RideSelectionScreenProps> = ({
   onRideSelected,
   onCancel,
 }) => {
-  const [selectedRideId, setSelectedRideId] = useState<string | null>(rideOptions[0]?.id || null);
+  const [selectedRideId, setSelectedRideId] = useState<string | null>(rideOptions.find(r => r.id === 'swiftgo')?.id || rideOptions[0]?.id || null);
   const [isConfirming, setIsConfirming] = useState(false);
   const [fares, setFares] = useState<Record<string, FareInfo>>({});
+  const [showBikeSuggestion, setShowBikeSuggestion] = useState(false);
   
   // A random driver is chosen just for calculation purposes. The final driver is assigned in App.tsx.
   const calculationDriver = React.useMemo(() => mockDrivers[Math.floor(Math.random() * mockDrivers.length)], []);
@@ -42,13 +43,25 @@ const RideSelectionScreen: React.FC<RideSelectionScreenProps> = ({
     });
     setFares(initialFares);
 
-    for (const ride of rideOptions) {
-        const result = await calculateFare(pickup, dropoff, ride, calculationDriver);
-        setFares(prevFares => ({
-            ...prevFares,
-            [ride.id]: { ...result, isLoading: false }
-        }));
+    const farePromises = rideOptions.map(ride => calculateFare(pickup, dropoff, ride, calculationDriver));
+    const fareResults = await Promise.all(farePromises);
+
+    const newFares: Record<string, FareInfo> = {};
+    let firstDistanceKm = -1;
+
+    rideOptions.forEach((ride, index) => {
+        const result = fareResults[index];
+        newFares[ride.id] = { ...result, isLoading: false };
+        if (index === 0 && result.distance) {
+            firstDistanceKm = parseFloat(result.distance);
+        }
+    });
+    setFares(newFares);
+
+    if (firstDistanceKm > 0 && firstDistanceKm < 3) {
+        setShowBikeSuggestion(true);
     }
+
   }, [pickup, dropoff, rideOptions, calculationDriver]);
 
   useEffect(() => {
@@ -86,6 +99,15 @@ const RideSelectionScreen: React.FC<RideSelectionScreenProps> = ({
         </div>
 
         <div className="flex-1 space-y-3 overflow-y-auto">
+            {showBikeSuggestion && (
+                <div className="p-4 bg-green-500/10 dark:bg-green-900/50 border-2 border-green-500 rounded-lg flex items-center space-x-3">
+                    <BikeIcon className="w-8 h-8 text-green-500 flex-shrink-0" />
+                    <div>
+                        <h4 className="font-bold text-green-800 dark:text-green-300">Short Trip!</h4>
+                        <p className="text-sm text-green-700 dark:text-green-400">Consider a bike for a faster, cheaper, and eco-friendly ride.</p>
+                    </div>
+                </div>
+            )}
             {rideOptions.map((ride) => {
                 const isSelected = ride.id === selectedRideId;
                 const fareInfo = fares[ride.id];

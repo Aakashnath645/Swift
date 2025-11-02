@@ -296,7 +296,7 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
                                   {tripPhase === 'ARRIVING' ? `Pickup: ${pickup.address.split(',')[0]}` : `Destination: ${dropoff.address.split(',')[0]}`}
                                 </p>
                             </div>
-                            <TripProgressIndicator phase={tripPhase} />
+                            <TripProgressIndicator phase={tripPhase} isBikeTrip={ride.id === 'swiftbike'} />
                         </div>
 
                         <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg space-y-3">

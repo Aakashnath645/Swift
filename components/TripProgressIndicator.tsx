@@ -1,9 +1,10 @@
 import React from 'react';
 import { TripPhase } from '../types';
-import { CarIcon, RouteIcon, MapPinIcon } from './icons';
+import { CarIcon, RouteIcon, MapPinIcon, BikeIcon } from './icons';
 
 interface TripProgressIndicatorProps {
   phase: TripPhase;
+  isBikeTrip?: boolean;
 }
 
 // FIX: The type for the `icon` prop was too generic (`React.ReactElement`), causing TypeScript
@@ -36,14 +37,14 @@ const Connector: React.FC<{ isCompleted: boolean }> = ({ isCompleted }) => {
     );
 };
 
-const TripProgressIndicator: React.FC<TripProgressIndicatorProps> = ({ phase }) => {
+const TripProgressIndicator: React.FC<TripProgressIndicatorProps> = ({ phase, isBikeTrip = false }) => {
   const isArriving = phase === 'ARRIVING';
   const isEnRoute = phase === 'EN_ROUTE';
   const isArrived = phase === 'ARRIVED';
 
   return (
     <div className="w-full flex items-center justify-center my-4 px-2">
-        <ProgressStep label="Arriving" icon={<CarIcon />} isActive={isArriving} isCompleted={isEnRoute || isArrived} />
+        <ProgressStep label="Arriving" icon={isBikeTrip ? <BikeIcon /> : <CarIcon />} isActive={isArriving} isCompleted={isEnRoute || isArrived} />
         <Connector isCompleted={isEnRoute || isArrived} />
         <ProgressStep label="On Trip" icon={<RouteIcon />} isActive={isEnRoute} isCompleted={isArrived} />
         <Connector isCompleted={isArrived} />

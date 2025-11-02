@@ -1,6 +1,6 @@
 import React from 'react';
 import type { RideOption, Driver, User, PaymentMethod, AppSettings, Location } from './types';
-import { CarIcon, PersonIcon, ZapIcon } from './components/icons';
+import { CarIcon, PersonIcon, ZapIcon, BikeIcon } from './components/icons';
 
 export const rideOptions: RideOption[] = [
   {
@@ -26,7 +26,22 @@ export const rideOptions: RideOption[] = [
     multiplier: 1.8,
     capacity: 6,
     icon: <PersonIcon className="w-8 h-8 text-amber-400" />,
+  },
+  {
+    id: 'swiftbike',
+    name: 'SwiftBike',
+    description: 'Quick, eco-friendly solo rides',
+    multiplier: 0.5,
+    capacity: 1,
+    icon: <BikeIcon className="w-8 h-8 text-green-400" />,
   }
+];
+
+export const mockBikeModels: { model: string; plate: string }[] = [
+    { model: 'Royal Enfield Classic 350', plate: 'KA 05 JD 1901' },
+    { model: 'Bajaj Pulsar NS200', plate: 'MH 12 AB 5678' },
+    { model: 'TVS Apache RTR 160', plate: 'TN 22 C 9876' },
+    { model: 'Hero Splendor Plus', plate: 'DL 08 S 4321' },
 ];
 
 export const mockDrivers: Driver[] = [

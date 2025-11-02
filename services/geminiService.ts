@@ -16,18 +16,27 @@ export const calculateFare = async (
     ride: RideOption,
     driver: Driver
 ): Promise<{ fare: number; distance: string; reasoning: string; eta: number }> => {
+    const isBike = ride.name.toLowerCase().includes('bike');
+    
+    const vehicleInfo = isBike
+      ? `- Ride Type: "${ride.name}" (A quick, eco-friendly bike ride)`
+      : `- Ride Type: "${ride.name}" (${ride.description})\n- Vehicle: "${driver.vehicleModel}"`;
+
+    const fareInstructions = isBike
+      ? `For fare: Use a base fare of ₹20, a per-kilometer rate of ₹8, and a per-minute rate of ₹1. A bike is faster in traffic, so adjust ETA accordingly.`
+      : `For fare: Use a base fare of ₹50, a per-kilometer rate of ₹12, and a per-minute rate of ₹2. Apply the ride type multiplier of ${ride.multiplier}.`;
+
     const prompt = `
         Act as a ride-sharing fare and ETA calculator for India.
         Calculate the estimated fare in Indian Rupees (₹) and the estimated time of arrival (ETA) in minutes for a trip with the following details:
         - Pickup: "${pickup.address}"
         - Destination: "${dropoff.address}"
-        - Ride Type: "${ride.name}" (${ride.description})
-        - Vehicle: "${driver.vehicleModel}"
+        ${vehicleInfo}
 
         Consider the following for your calculations:
         1.  Estimate the distance in kilometers.
         2.  Assume potential urban traffic, which might affect travel time.
-        3.  For fare: Use a base fare of ₹50, a per-kilometer rate of ₹12, and a per-minute rate of ₹2. Apply the ride type multiplier of ${ride.multiplier}.
+        3.  ${fareInstructions}
         4.  For ETA: Estimate total travel time in minutes.
         5.  Provide a brief, one-sentence reasoning for the final price.
 

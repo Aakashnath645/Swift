@@ -11,7 +11,7 @@ import BottomNavBar from './components/BottomNavBar';
 import SideNavBar from './components/SideNavBar';
 import RideSelectionScreen from './components/RideSelectionScreen';
 import TripScreen from './components/TripScreen';
-import { rideOptions, mockDrivers, mockUser, initialPaymentMethods, initialAppSettings, TERMS_AND_CONDITIONS, CANCELLATION_POLICY } from './constants';
+import { rideOptions, mockDrivers, mockUser, initialPaymentMethods, initialAppSettings, TERMS_AND_CONDITIONS, CANCELLATION_POLICY, mockBikeModels } from './constants';
 import EditProfileScreen from './components/EditProfileScreen';
 import PaymentMethodsScreen from './components/PaymentMethodsScreen';
 import SettingsScreen from './components/SettingsScreen';
@@ -158,8 +158,18 @@ const App: React.FC = () => {
     setFare(calculatedFare);
     setEta(tripEta);
     setTimeout(() => {
-        const randomDriver = mockDrivers[Math.floor(Math.random() * mockDrivers.length)];
-        setDriver(randomDriver);
+        let selectedDriver = mockDrivers[Math.floor(Math.random() * mockDrivers.length)];
+        
+        if (ride.id === 'swiftbike') {
+            const randomBike = mockBikeModels[Math.floor(Math.random() * mockBikeModels.length)];
+            selectedDriver = {
+                ...selectedDriver,
+                vehicleModel: randomBike.model,
+                licensePlate: randomBike.plate,
+            };
+        }
+
+        setDriver(selectedDriver);
         setScreen(Screen.ON_TRIP);
     }, 3000);
   }, []);
