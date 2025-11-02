@@ -21,7 +21,7 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ activePage, onNavigate }) =
       : 'bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg';
 
   return (
-    <nav className={`flex justify-around items-center ${navBarClass} py-2`} aria-label="Main navigation">
+    <nav className={`flex justify-around items-center ${navBarClass} py-2 lg:hidden`} aria-label="Main navigation">
       {navItems.map((item) => {
         const isActive = activePage === item.page;
         return (

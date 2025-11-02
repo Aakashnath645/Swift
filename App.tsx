@@ -7,6 +7,7 @@ import HomeScreen from './components/HomeScreen';
 import ActivityScreen from './components/ActivityScreen';
 import ProfileScreen from './components/ProfileScreen';
 import BottomNavBar from './components/BottomNavBar';
+import SideNavBar from './components/SideNavBar';
 import RideSelectionScreen from './components/RideSelectionScreen';
 import TripScreen from './components/TripScreen';
 import { rideOptions, mockDrivers, mockUser, initialPaymentMethods, initialAppSettings } from './constants';
@@ -243,9 +244,12 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-sans">
-      <div className="max-w-md mx-auto h-screen flex flex-col">
+    <div className="w-full min-h-screen bg-gray-100 dark:bg-gray-800 flex items-center justify-center p-0 lg:p-4">
+      <div className="w-full h-screen lg:h-[calc(100vh-2rem)] max-w-7xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-sans lg:rounded-2xl shadow-xl flex overflow-hidden">
+        <SideNavBar activePage={page} onNavigate={setPage} />
+        <div className="flex-1 flex flex-col overflow-hidden">
           {renderScreen()}
+        </div>
       </div>
     </div>
   );

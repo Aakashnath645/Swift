@@ -59,6 +59,10 @@ const SetLocationScreen: React.FC<SetLocationScreenProps> = ({ onBack, onLocatio
 
   return (
     <div className="flex-1 flex flex-col bg-white dark:bg-gray-900 animate-fadeIn">
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
       <PageHeader title="Set your route" onBack={onBack} />
       <main className="flex-1 p-6 flex flex-col">
         <div className="space-y-4">
@@ -84,31 +88,33 @@ const SetLocationScreen: React.FC<SetLocationScreenProps> = ({ onBack, onLocatio
           </div>
         </div>
         
-        <div className="mt-6 flex-1 overflow-y-auto">
-            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Suggestions</h3>
+        <div className="mt-8">
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Suggestions</h3>
             {isLoading && (
                 <div className="flex justify-center items-center py-8">
                     <div className="w-8 h-8 border-2 border-t-transparent border-cyan-500 dark:border-cyan-400 rounded-full animate-spin"></div>
                 </div>
             )}
-            {error && <p className="text-center text-red-500 dark:text-red-400">{error}</p>}
+            {error && <p className="text-center text-red-500 dark:text-red-400 py-8">{error}</p>}
             {!isLoading && !error && suggestions.length === 0 && (
-                 <p className="text-center text-gray-400 dark:text-gray-500">No suggestions found nearby.</p>
+                 <p className="text-center text-gray-400 dark:text-gray-500 py-8">No suggestions found nearby.</p>
             )}
-            <div className="space-y-2">
-                {suggestions.map((chunk, index) => chunk.maps?.title && (
-                    <button 
-                        key={`${chunk.maps.uri}-${index}`}
-                        onClick={() => setDropoff(chunk.maps!.title)}
-                        className="w-full text-left flex items-center p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                    >
-                        <div className="p-2 bg-gray-200 dark:bg-gray-700 rounded-full mr-4">
-                           <MapPinIcon className="w-5 h-5 text-gray-500 dark:text-gray-400"/>
-                        </div>
-                        <span className="text-black dark:text-white">{chunk.maps.title}</span>
-                    </button>
-                ))}
-            </div>
+            {!isLoading && !error && suggestions.length > 0 && (
+              <div className="flex space-x-4 overflow-x-auto pb-4 -mx-6 px-6 scrollbar-hide">
+                  {suggestions.map((chunk, index) => chunk.maps?.title && (
+                      <button 
+                          key={`${chunk.maps.uri}-${index}`}
+                          onClick={() => setDropoff(chunk.maps!.title)}
+                          className="w-36 h-36 flex-shrink-0 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors flex flex-col items-center justify-center text-center space-y-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                      >
+                          <div className="p-3 bg-gray-200 dark:bg-gray-700 rounded-full">
+                             <MapPinIcon className="w-6 h-6 text-gray-500 dark:text-gray-400"/>
+                          </div>
+                          <span className="text-black dark:text-white font-medium text-sm line-clamp-2 h-10 flex items-center justify-center">{chunk.maps.title}</span>
+                      </button>
+                  ))}
+              </div>
+            )}
         </div>
 
         <div className="mt-auto pt-4">

@@ -108,15 +108,15 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
   }, [chatMessages]);
 
   return (
-    <div className="flex-1 flex flex-col bg-white dark:bg-gray-900">
-        <div className="h-2/5">
+    <div className="flex-1 flex flex-col lg:flex-row bg-white dark:bg-gray-900">
+        <div className="h-2/5 lg:h-full lg:w-3/5">
              <AnimatedMapPlaceholder 
                 status="trip" 
                 eta={inProgress ? undefined : arrivalEta} 
                 destination={dropoff.address}
              />
         </div>
-        <div className="flex-1 p-4 -mt-16 rounded-t-3xl bg-white dark:bg-gray-900 flex flex-col justify-between">
+        <div className="flex-1 p-4 -mt-16 lg:mt-0 rounded-t-3xl lg:rounded-none bg-white dark:bg-gray-900 flex flex-col justify-between lg:w-2/5 lg:border-l lg:border-gray-200 dark:lg:border-gray-700">
             <div>
                 <div className="text-center mb-4">
                     <h2 className="text-xl font-bold">{tripStatus}</h2>

@@ -22,7 +22,7 @@
 Swift is designed to feel like a complete, native application on your mobile device.
 
 ### Core Experience
-- **📱 Platform-Adaptive UI**: The interface automatically adapts its design system to feel native on both **iOS** and **Android**.
+- **📱 Fully Responsive**: A seamless experience on any device. The UI is optimized for mobile (iOS & Android) and gracefully scales to provide a rich, multi-panel layout for tablets and desktops.
 - **🎨 Light & Dark Modes**: Enjoy a stunning **Dark Mode** or a crisp **Light Mode**. The app respects your system's preference and lets you toggle it manually.
 - **👤 User Authentication**: Simple and secure flows for user sign-in and sign-up.
 - **📜 Persistent Ride History**: The Activity screen automatically logs the details of every completed trip for easy tracking.
@@ -43,4 +43,4 @@ Swift is designed to feel like a complete, native application on your mobile dev
 
 - **Frontend**: React, TypeScript, Tailwind CSS
 - **AI & Services**: Google Gemini API
-- **Platform**: A responsive web application designed for a native mobile experience.
+- **Platform**: A fully responsive web application providing a native-like experience on mobile and a tailored multi-column interface for larger screens.
