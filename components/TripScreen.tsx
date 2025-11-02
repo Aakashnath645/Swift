@@ -106,81 +106,59 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
   const [isSending, setIsSending] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // --- Bottom Sheet State & Logic ---
-  const containerRef = useRef<HTMLDivElement>(null);
-  const sheetRef = useRef<HTMLDivElement>(null);
-  const [containerHeight, setContainerHeight] = useState(0);
-  const [sheetHeight, setSheetHeight] = useState<number | undefined>(undefined);
-  const [isSnapping, setIsSnapping] = useState(true);
-  const dragState = useRef({ isDragging: false, startY: 0, startHeight: 0 });
-
-  const snapPoints = useMemo(() => {
-    if (containerHeight === 0) return { expanded: 600, default: 450, collapsed: 160 };
-    return {
-      expanded: containerHeight - 120,
-      default: Math.min(450, containerHeight - 200),
-      collapsed: 160,
-    };
-  }, [containerHeight]);
+  // --- Split View Panel State & Logic ---
+  const [isPanelExpanded, setIsPanelExpanded] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
+  const dragState = useRef({ isDragging: false, startY: 0, endY: 0 });
+  
+  const COLLAPSED_HEIGHT = 160;
+  const EXPANDED_HEIGHT = 450;
+  const panelHeight = isPanelExpanded ? EXPANDED_HEIGHT : COLLAPSED_HEIGHT;
 
   useEffect(() => {
-    if (containerRef.current) {
-        const resizeObserver = new ResizeObserver(entries => {
-            if (entries[0]) {
-                setContainerHeight(entries[0].contentRect.height);
-            }
-        });
-        resizeObserver.observe(containerRef.current);
-        return () => resizeObserver.disconnect();
-    }
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 1024);
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
   }, []);
 
-  useEffect(() => {
-    if (sheetHeight === undefined) {
-      setSheetHeight(snapPoints.default);
-    }
-  }, [snapPoints, sheetHeight]);
-
-  const handleDragMove = useCallback((e: TouchEvent | MouseEvent) => {
-    if (!dragState.current.isDragging) return;
-    e.preventDefault();
-    const y = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    const deltaY = y - dragState.current.startY;
-    const newHeight = dragState.current.startHeight - deltaY;
-    const clampedHeight = Math.max(snapPoints.collapsed, Math.min(newHeight, snapPoints.expanded));
-    setSheetHeight(clampedHeight);
-  }, [snapPoints]);
-
+  const handleTogglePanel = useCallback(() => {
+    setIsPanelExpanded(prev => !prev);
+  }, []);
+  
   const handleDragEnd = useCallback(() => {
     if (!dragState.current.isDragging) return;
     dragState.current.isDragging = false;
-    setIsSnapping(true);
+
+    const deltaY = dragState.current.startY - dragState.current.endY; // Positive is drag up
+    
+    if (Math.abs(deltaY) > 50) { // Drag threshold
+        setIsPanelExpanded(deltaY > 0); // Expand if dragged up
+    }
     
     window.removeEventListener('mousemove', handleDragMove);
     window.removeEventListener('touchmove', handleDragMove);
     window.removeEventListener('mouseup', handleDragEnd);
     window.removeEventListener('touchend', handleDragEnd);
-
-    const currentH = sheetHeight || snapPoints.default;
-    const distances = Object.entries(snapPoints).map(([key, value]) => ({ key, dist: Math.abs(currentH - value) }));
-    distances.sort((a, b) => a.dist - b.dist);
-    const closestSnapPointKey = distances[0].key as keyof typeof snapPoints;
-    setSheetHeight(snapPoints[closestSnapPointKey]);
-  }, [sheetHeight, snapPoints, handleDragMove]);
+  }, []);
+  
+  const handleDragMove = useCallback((e: TouchEvent | MouseEvent) => {
+    if (!dragState.current.isDragging) return;
+    const y = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    dragState.current.endY = y;
+  }, []);
 
   const handleDragStart = useCallback((e: React.TouchEvent | React.MouseEvent) => {
-    if (window.innerWidth >= 1024) return; // Disable on desktop
+    if (isDesktop) return; // Disable on desktop
     dragState.current.isDragging = true;
-    setIsSnapping(false);
     const y = 'touches' in e ? e.touches[0].clientY : e.clientY;
     dragState.current.startY = y;
-    dragState.current.startHeight = sheetRef.current?.clientHeight || snapPoints.default;
+    dragState.current.endY = y;
 
     window.addEventListener('mousemove', handleDragMove);
-    window.addEventListener('touchmove', handleDragMove, { passive: false });
+    window.addEventListener('touchmove', handleDragMove);
     window.addEventListener('mouseup', handleDragEnd);
     window.addEventListener('touchend', handleDragEnd);
-  }, [snapPoints.default, handleDragMove, handleDragEnd]);
+  }, [isDesktop, handleDragMove, handleDragEnd]);
 
 
   const driverInitialLocation = useMemo(() => ({
@@ -247,8 +225,8 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
   }, [chatMessages]);
 
   return (
-    <div ref={containerRef} className="flex-1 flex flex-col lg:flex-row bg-white dark:bg-gray-900 relative overflow-hidden">
-        <div className="flex-1 lg:h-full lg:w-3/5">
+    <div className="flex-1 flex flex-col lg:flex-row bg-white dark:bg-gray-900 relative overflow-hidden">
+        <div className="flex-1 lg:w-3/5 min-h-0">
              <MockMap 
                 pickup={{ lat: pickup.lat, lng: pickup.lng }}
                 dropoff={{ lat: dropoff.lat, lng: dropoff.lng }}
@@ -258,15 +236,13 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
         </div>
         
         <div 
-            ref={sheetRef}
-            style={{ height: sheetHeight ? `${sheetHeight}px` : undefined }}
-            className={`absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-900 rounded-t-3xl shadow-2xl-top-light dark:shadow-2xl-top-dark z-10 lg:static lg:w-2/5 lg:h-auto lg:!h-auto lg:rounded-none lg:shadow-none lg:border-l lg:border-gray-200 dark:lg:border-gray-700 flex flex-col
-                ${isSnapping ? 'transition-all duration-300 ease-in-out' : ''}`
-            }
+            style={{ height: isDesktop ? 'auto' : `${panelHeight}px` }}
+            className={`bg-white dark:bg-gray-900 rounded-t-3xl shadow-2xl-top-light dark:shadow-2xl-top-dark z-10 lg:w-2/5 lg:h-auto lg:rounded-none lg:shadow-none lg:border-l lg:border-gray-200 dark:lg:border-gray-700 flex flex-col flex-shrink-0 transition-all duration-300 ease-in-out`}
         >
             <div
                 onMouseDown={handleDragStart}
                 onTouchStart={handleDragStart}
+                onClick={handleTogglePanel}
                 className="lg:hidden w-full py-3 flex-shrink-0 flex justify-center items-center cursor-grab active:cursor-grabbing"
             >
                 <div className="w-10 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
