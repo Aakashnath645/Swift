@@ -222,7 +222,7 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
 
   const panelClasses = isDesktop 
     ? "lg:w-2/5 lg:h-auto"
-    : `transition-all duration-300 ease-in-out ${isPanelExpanded ? 'h-[70vh] max-h-[500px]' : 'h-24'}`;
+    : `transition-all duration-300 ease-in-out ${isPanelExpanded ? 'h-[70vh] max-h-[500px]' : 'h-28'}`;
 
 
   return (
@@ -249,18 +249,23 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
             </div>
 
             { !isPanelExpanded && !isDesktop ? (
-                <div className="flex items-center justify-between px-4 pb-3 flex-1">
-                    <div className="flex items-center space-x-3 overflow-hidden">
-                        <img src={driver.avatarUrl} alt={driver.name} className="w-12 h-12 rounded-full flex-shrink-0"/>
+                <div className="flex items-center justify-between px-4 flex-1">
+                    <div className="flex items-center space-x-4 overflow-hidden">
+                        <img src={driver.avatarUrl} alt={driver.name} className="w-16 h-16 rounded-full flex-shrink-0"/>
                         <div className="overflow-hidden">
-                            <h3 className="font-bold text-black dark:text-white truncate">{driver.name}</h3>
+                            <h3 className="font-bold text-lg text-black dark:text-white truncate">{driver.name}</h3>
                             <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{tripStatus}</p>
+                             <p className="font-mono font-bold text-black dark:text-white bg-amber-300 dark:bg-amber-400 dark:text-black px-2 py-0.5 rounded text-xs inline-block mt-1">{driver.licensePlate}</p>
                         </div>
                     </div>
-                     <div className="text-right flex-shrink-0 ml-2">
-                        <p className="font-mono font-bold text-black dark:text-white bg-amber-300 dark:bg-amber-400 dark:text-black px-2 py-0.5 rounded text-sm">{driver.licensePlate}</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">{driver.vehicleModel}</p>
-                     </div>
+                     <div className="flex items-center space-x-2 flex-shrink-0">
+                        <button onClick={() => setIsChatOpen(true)} className="p-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-full transition-colors">
+                            <MessageIcon className="w-6 h-6"/>
+                        </button>
+                        <button onClick={() => setCallState('ringing')} className="p-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-full transition-colors">
+                            <PhoneIcon className="w-6 h-6"/>
+                        </button>
+                    </div>
                 </div>
             ) : (
                 <>
