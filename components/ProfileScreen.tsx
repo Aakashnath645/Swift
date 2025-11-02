@@ -22,7 +22,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
     onNavigateToSavedPlaces,
 }) => {
   return (
-    <div className="h-full flex flex-col bg-white dark:bg-gray-900 text-black dark:text-white p-6 lg:p-8">
+    <div className="h-full flex flex-col bg-white dark:bg-gray-900 text-black dark:text-white p-6 lg:p-8 pt-20 lg:pt-8">
       <div className="lg:grid lg:grid-cols-5 lg:gap-8 h-full">
         {/* Left Column: Profile Info & Stats */}
         <div className="lg:col-span-2 space-y-8">

@@ -111,8 +111,8 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
   const dragState = useRef({ isDragging: false, startY: 0, endY: 0 });
   
-  const COLLAPSED_HEIGHT = 160;
-  const EXPANDED_HEIGHT = 450;
+  const COLLAPSED_HEIGHT = 90;
+  const EXPANDED_HEIGHT = 480;
   const panelHeight = isPanelExpanded ? EXPANDED_HEIGHT : COLLAPSED_HEIGHT;
 
   useEffect(() => {
@@ -248,64 +248,82 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
                 <div className="w-10 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
             </div>
 
-            <div className="flex-1 px-4 pt-0 lg:pt-4 overflow-y-auto">
-                <div className="flex items-center space-x-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-                    <img src={driver.avatarUrl} alt={driver.name} className="w-16 h-16 rounded-full"/>
-                    <div>
-                        <h3 className="text-xl font-bold">{driver.name}</h3>
-                        <div className="flex items-center text-sm text-amber-500 dark:text-amber-400">
-                            {driver.rating} <StarIcon className="w-4 h-4 ml-1"/>
+            { !isPanelExpanded && !isDesktop ? (
+                <div className="flex items-center justify-between px-4 pb-3 flex-1">
+                    <div className="flex items-center space-x-3 overflow-hidden">
+                        <img src={driver.avatarUrl} alt={driver.name} className="w-12 h-12 rounded-full flex-shrink-0"/>
+                        <div className="overflow-hidden">
+                            <h3 className="font-bold text-black dark:text-white truncate">{driver.name}</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{tripStatus}</p>
                         </div>
                     </div>
-                    <div className="flex-grow" />
-                    <div className="flex items-center space-x-2">
-                        <button onClick={() => setIsChatOpen(true)} className="p-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-full transition-colors">
-                            <MessageIcon className="w-6 h-6"/>
-                        </button>
-                        <button onClick={() => setCallState('ringing')} className="p-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-full transition-colors">
-                            <PhoneIcon className="w-6 h-6"/>
-                        </button>
-                    </div>
+                     <div className="text-right flex-shrink-0 ml-2">
+                        <p className="font-mono font-bold text-black dark:text-white bg-amber-300 dark:bg-amber-400 dark:text-black px-2 py-0.5 rounded text-sm">{driver.licensePlate}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{driver.vehicleModel}</p>
+                     </div>
                 </div>
-                
-                <div className="my-4">
-                     <div className="text-center mb-2">
-                        <h2 className="text-lg font-bold">{tripStatus}</h2>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {tripPhase === 'ARRIVING' ? `Pickup: ${pickup.address.split(',')[0]}` : `Destination: ${dropoff.address.split(',')[0]}`}
-                        </p>
-                    </div>
-                    <TripProgressIndicator phase={tripPhase} />
-                </div>
+            ) : (
+                <>
+                    <div className="flex-1 px-4 pt-0 lg:pt-4 overflow-y-auto">
+                        <div className="flex items-center space-x-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+                            <img src={driver.avatarUrl} alt={driver.name} className="w-16 h-16 rounded-full"/>
+                            <div>
+                                <h3 className="text-xl font-bold">{driver.name}</h3>
+                                <div className="flex items-center text-sm text-amber-500 dark:text-amber-400">
+                                    {driver.rating} <StarIcon className="w-4 h-4 ml-1"/>
+                                </div>
+                            </div>
+                            <div className="flex-grow" />
+                            <div className="flex items-center space-x-2">
+                                <button onClick={() => setIsChatOpen(true)} className="p-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-full transition-colors">
+                                    <MessageIcon className="w-6 h-6"/>
+                                </button>
+                                <button onClick={() => setCallState('ringing')} className="p-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-full transition-colors">
+                                    <PhoneIcon className="w-6 h-6"/>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div className="my-4">
+                             <div className="text-center mb-2">
+                                <h2 className="text-lg font-bold">{tripStatus}</h2>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                  {tripPhase === 'ARRIVING' ? `Pickup: ${pickup.address.split(',')[0]}` : `Destination: ${dropoff.address.split(',')[0]}`}
+                                </p>
+                            </div>
+                            <TripProgressIndicator phase={tripPhase} />
+                        </div>
 
-                <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg space-y-3">
-                    <div className="flex justify-between items-center text-sm">
-                        <span className="font-semibold text-gray-500 dark:text-gray-400">Ride</span>
-                        <span className="font-bold text-black dark:text-white">{ride.name}</span>
+                        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg space-y-3">
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="font-semibold text-gray-500 dark:text-gray-400">Ride</span>
+                                <span className="font-bold text-black dark:text-white">{ride.name}</span>
+                            </div>
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="font-semibold text-gray-500 dark:text-gray-400">Vehicle</span>
+                                <span className="font-bold text-black dark:text-white">{driver.vehicleModel}</span>
+                            </div>
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="font-semibold text-gray-500 dark:text-gray-400">License Plate</span>
+                                <span className="font-mono font-bold text-black dark:text-white bg-amber-300 dark:bg-amber-400 dark:text-black px-2 py-0.5 rounded">{driver.licensePlate}</span>
+                            </div>
+                             <div className="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-gray-700">
+                                <span className="font-semibold text-gray-500 dark:text-gray-400 text-base">Fare</span>
+                                <span className="font-bold text-xl text-black dark:text-white">{formatCurrency(fare)}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex justify-between items-center text-sm">
-                        <span className="font-semibold text-gray-500 dark:text-gray-400">Vehicle</span>
-                        <span className="font-bold text-black dark:text-white">{driver.vehicleModel}</span>
-                    </div>
-                    <div className="flex justify-between items-center text-sm">
-                        <span className="font-semibold text-gray-500 dark:text-gray-400">License Plate</span>
-                        <span className="font-mono font-bold text-black dark:text-white bg-amber-300 dark:bg-amber-400 dark:text-black px-2 py-0.5 rounded">{driver.licensePlate}</span>
-                    </div>
-                     <div className="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-gray-700">
-                        <span className="font-semibold text-gray-500 dark:text-gray-400 text-base">Fare</span>
-                        <span className="font-bold text-xl text-black dark:text-white">{formatCurrency(fare)}</span>
-                    </div>
-                </div>
-            </div>
 
-            <div className="mt-auto pt-4 px-4 pb-4 flex-shrink-0">
-                 <button 
-                    onClick={() => setShowCancelModal(true)}
-                    className="w-full py-3 bg-gray-200 text-red-600 dark:bg-gray-700 dark:text-red-400 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                >
-                    Cancel Trip
-                </button>
-            </div>
+                    <div className="mt-auto pt-4 px-4 pb-4 flex-shrink-0">
+                         <button 
+                            onClick={() => setShowCancelModal(true)}
+                            className="w-full py-3 bg-gray-200 text-red-600 dark:bg-gray-700 dark:text-red-400 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                        >
+                            Cancel Trip
+                        </button>
+                    </div>
+                </>
+            )}
         </div>
 
         {/* Modals and Overlays */}

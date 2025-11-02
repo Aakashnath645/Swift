@@ -288,34 +288,32 @@ const App: React.FC = () => {
   }, []);
 
   const renderMainPage = () => {
-    switch (page) {
-        case Page.HOME:
-            return <HomeScreen 
-              user={user} 
-              savedPlaces={savedPlaces}
-              onLocationsSet={handleLocationsSet}
-            />;
-        case Page.ACTIVITY:
-            return <ActivityScreen tripHistory={tripHistory} />;
-        case Page.PROFILE:
-            return <ProfileScreen 
-                user={user}
-                onLogout={handleLogout} 
-                onNavigateToEditProfile={() => handleNavigateTo(Screen.EDIT_PROFILE)}
-                onNavigateToPayments={() => handleNavigateTo(Screen.PAYMENT_METHODS)}
-                onNavigateToSettings={() => handleNavigateTo(Screen.SETTINGS)}
-                onNavigateToHelp={() => handleNavigateTo(Screen.HELP)}
-                onNavigateToSavedPlaces={() => handleNavigateTo(Screen.SAVED_PLACES)}
-            />;
-        default:
-            return <HomeScreen 
-              user={user} 
-              savedPlaces={savedPlaces}
-              onLocationsSet={handleLocationsSet}
-            />;
-    }
+    return (
+        <div className="page-container flex-1">
+            <div className="page" style={{ transform: page === Page.HOME ? 'translateX(0)' : (page > Page.HOME ? 'translateX(-100%)' : 'translateX(100%)') }}>
+                <HomeScreen 
+                  user={user} 
+                  savedPlaces={savedPlaces}
+                  onLocationsSet={handleLocationsSet}
+                />
+            </div>
+             <div className="page" style={{ transform: page === Page.ACTIVITY ? 'translateX(0)' : (page > Page.ACTIVITY ? 'translateX(-100%)' : 'translateX(100%)') }}>
+                 <ActivityScreen tripHistory={tripHistory} />
+            </div>
+             <div className="page" style={{ transform: page === Page.PROFILE ? 'translateX(0)' : 'translateX(100%)' }}>
+                 <ProfileScreen 
+                    user={user}
+                    onLogout={handleLogout} 
+                    onNavigateToEditProfile={() => handleNavigateTo(Screen.EDIT_PROFILE)}
+                    onNavigateToPayments={() => handleNavigateTo(Screen.PAYMENT_METHODS)}
+                    onNavigateToSettings={() => handleNavigateTo(Screen.SETTINGS)}
+                    onNavigateToHelp={() => handleNavigateTo(Screen.HELP)}
+                    onNavigateToSavedPlaces={() => handleNavigateTo(Screen.SAVED_PLACES)}
+                />
+            </div>
+        </div>
+    );
   }
-
 
   const renderScreen = () => {
     if (!isInitialized) {
@@ -332,17 +330,20 @@ const App: React.FC = () => {
       case Screen.SIGNUP:
         return <SignUpScreen onSignUp={handleSignUp} onSwitchToLogin={handleSwitchToLogin} />;
       case Screen.HOME:
+        const showHeader = page === Page.ACTIVITY || page === Page.PROFILE;
+        const pageTitles: { [key in Page]?: string } = {
+            [Page.ACTIVITY]: 'Ride History',
+            [Page.PROFILE]: 'Profile'
+        };
+
         return (
-            <div className="flex-1 flex flex-col overflow-hidden">
-                <main className="flex-1 overflow-y-auto">{renderMainPage()}</main>
-                <BottomNavBar activePage={page} onNavigate={setPage} />
-            </div>
-        );
-      case Screen.SETTING_LOCATION:
-        // This screen is now merged into HomeScreen, but we keep the case as a fallback.
-        return (
-            <div className="flex-1 flex flex-col overflow-hidden">
-                <main className="flex-1 overflow-y-auto">{renderMainPage()}</main>
+            <div className="flex-1 flex flex-col overflow-hidden relative">
+                 {showHeader && (
+                    <header className="absolute top-0 left-0 right-0 z-20 p-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm lg:relative lg:bg-transparent dark:lg:bg-transparent lg:backdrop-blur-none lg:border-b lg:border-gray-200 dark:lg:border-gray-700 lg:p-6">
+                        <h1 className="text-xl lg:text-2xl font-bold text-black dark:text-white text-center lg:text-left">{pageTitles[page]}</h1>
+                    </header>
+                )}
+                {renderMainPage()}
                 <BottomNavBar activePage={page} onNavigate={setPage} />
             </div>
         );

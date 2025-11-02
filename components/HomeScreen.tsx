@@ -109,9 +109,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ user, savedPlaces, onLocationsS
   }, []);
   
   const handleConfirm = () => {
-    if (pickup.address && dropoff && selectedDropoffLocation) {
-        onLocationsSet(pickup, selectedDropoffLocation);
-    }
+    if (!pickup.address || !dropoff) return;
+
+    // If a suggestion was clicked, use it. Otherwise, create a mock location from text.
+    const finalDropoffLocation = selectedDropoffLocation || {
+        address: dropoff,
+        // Generate mock coordinates near the pickup for a realistic simulation
+        lat: pickup.lat + (Math.random() - 0.5) * 0.05,
+        lng: pickup.lng + (Math.random() - 0.5) * 0.05,
+    };
+    onLocationsSet(pickup, finalDropoffLocation);
   };
   
   const handleSelectSuggestion = (suggestion: Location) => {
@@ -122,6 +129,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ user, savedPlaces, onLocationsS
   const handleSelectSavedPlace = (place: SavedPlace) => {
     setDropoff(place.location.address);
     setSelectedDropoffLocation(place.location);
+  };
+
+  const handleDropoffChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDropoff(e.target.value);
+    // If user types manually, the previously selected suggestion is no longer valid
+    if (selectedDropoffLocation) {
+        setSelectedDropoffLocation(null);
+    }
   };
 
   const getIconForPlace = (type: SavedPlaceType) => {
@@ -188,7 +203,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ user, savedPlaces, onLocationsS
                   </div>
                   <div className="relative">
                     <LocationMarkerIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-600 dark:text-cyan-400" />
-                    <input type="text" placeholder="Where are you going?" value={dropoff} onChange={(e) => setDropoff(e.target.value)} className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500"/>
+                    <input type="text" placeholder="Where are you going?" value={dropoff} onChange={handleDropoffChange} className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:border-cyan-500"/>
                   </div>
                 </div>
             )}
@@ -227,7 +242,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ user, savedPlaces, onLocationsS
               <div className="pt-4 mt-auto">
                 <button
                     onClick={handleConfirm}
-                    disabled={!pickup.address || !dropoff || !selectedDropoffLocation}
+                    disabled={!pickup.address || !dropoff}
                     className="w-full py-3 bg-cyan-600 text-white rounded-lg font-semibold text-lg border-b-4 border-cyan-700 hover:bg-cyan-500 hover:border-cyan-600 active:border-b-0 active:translate-y-1 transition-all disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:border-b-4 disabled:border-gray-500 disabled:cursor-not-allowed disabled:translate-y-0"
                     >
                     Confirm Locations

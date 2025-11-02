@@ -16,9 +16,7 @@ const navItems = [
 
 const BottomNavBar: React.FC<BottomNavBarProps> = ({ activePage, onNavigate }) => {
   const platform = usePlatform();
-  const navBarClass = platform === 'ios'
-      ? 'bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-200/50 dark:border-gray-700/50'
-      : 'bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg';
+  const navBarClass = 'bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-200/50 dark:border-gray-700/50';
 
   return (
     <nav className={`flex justify-around items-center ${navBarClass} py-2 lg:hidden`} aria-label="Main navigation">

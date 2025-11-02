@@ -106,8 +106,8 @@ export const getDriverResponse = async (userMessage: string, driverName: string,
 
 export const getPlaceSuggestions = async (location: LatLng): Promise<Location[]> => {
     const prompt = `
-        Based on the user's current location (Latitude: ${location.lat}, Longitude: ${location.lng}), suggest 6 interesting and popular places to visit in San Francisco, CA.
-        Include a mix of landmarks, restaurants, and parks.
+        Based on the user's current location (Latitude: ${location.lat}, Longitude: ${location.lng}), suggest 6 interesting and popular places to visit nearby.
+        Include a mix of landmarks, restaurants, and parks relevant to the area.
         Return the result as a JSON array where each object has the exact keys "address" (string, full name of the place), "lat" (number), and "lng" (number).
     `;
 
