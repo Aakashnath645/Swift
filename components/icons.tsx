@@ -8,6 +8,57 @@ export const Logo: React.FC<IconProps> = (props) => (
   </svg>
 );
 
+export const OnboardingRequestIcon: React.FC<IconProps> = (props) => (
+    <svg {...props} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M160 100C160 133.137 133.137 160 100 160C66.8629 160 40 133.137 40 100C40 66.8629 66.8629 40 100 40C133.137 40 160 66.8629 160 100Z" className="stroke-current" strokeWidth="4" strokeOpacity="0.2"/>
+        <path d="M100 130L130 100" className="stroke-current" strokeWidth="4" strokeOpacity="0.2" strokeLinecap="round"/>
+        <g>
+            <path d="M100 20C83.4315 20 70 33.4315 70 50C70 72.5 100 100 100 100C100 100 130 72.5 130 50C130 33.4315 116.569 20 100 20Z" className="fill-current text-cyan-500 dark:text-cyan-400"/>
+            <circle cx="100" cy="50" r="10" fill="white"/>
+        </g>
+    </svg>
+);
+
+export const OnboardingChooseIcon: React.FC<IconProps> = (props) => (
+     <svg {...props} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(10, 25) rotate(-5 90 60)">
+            <rect width="180" height="120" rx="12" className="fill-current" fillOpacity="0.2"/>
+        </g>
+        <g transform="translate(10, 25) rotate(5 90 60)">
+             <rect width="180" height="120" rx="12" className="fill-current" fillOpacity="0.4"/>
+        </g>
+        <g transform="translate(10, 25)">
+            <rect width="180" height="120" rx="12" className="fill-current" fillOpacity="0.1"/>
+            <rect x="1" y="1" width="178" height="118" rx="11" className="fill-current text-white dark:text-gray-800"/>
+            <g className="text-gray-800 dark:text-white">
+                <g transform="translate(20, 30)">
+                    <CarIcon className="w-12 h-12 text-cyan-400" />
+                    <text x="5" y="80" fontSize="14" fontWeight="bold">SwiftGo</text>
+                </g>
+                <g transform="translate(90, 30)">
+                     <ZapIcon className="w-12 h-12 text-purple-400" />
+                     <text x="-5" y="80" fontSize="14" fontWeight="bold">SwiftComfort</text>
+                </g>
+            </g>
+        </g>
+    </svg>
+);
+
+export const OnboardingTrackIcon: React.FC<IconProps> = (props) => (
+    <svg {...props} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="40" y="20" width="120" height="160" rx="20" className="stroke-current" strokeWidth="4" strokeOpacity="0.2"/>
+        <path d="M60 50 C 80 80, 120 70, 140 100" strokeDasharray="4 4" className="stroke-current text-cyan-500 dark:text-cyan-400" strokeWidth="3" strokeLinecap="round"/>
+        <path d="M140 100 C 160 130, 100 140, 80 160" className="stroke-current text-cyan-500 dark:text-cyan-400" strokeWidth="3" strokeLinecap="round"/>
+        <circle cx="60" cy="50" r="5" className="fill-current text-green-500"/>
+        <circle cx="80" cy="160" r="5" className="fill-current text-red-500"/>
+        <g>
+            <circle cx="140" cy="100" r="10" className="fill-current text-black dark:text-white"/>
+            <CarIcon className="w-4 h-4 text-white" transform="translate(132, 92)"/>
+        </g>
+    </svg>
+);
+
+
 export const HomeIcon: React.FC<IconProps> = (props) => (
     <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M3 9.5L12 2L21 9.5V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -151,6 +202,13 @@ export const MapPinIcon: React.FC<IconProps> = (props) => (
     <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" stroke="currentColor" strokeWidth="1.5"/>
+    </svg>
+);
+
+export const RouteIcon: React.FC<IconProps> = (props) => (
+    <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M23 6L13.5 15.5L8.5 10.5L1 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M17 6H23V12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
 );
 

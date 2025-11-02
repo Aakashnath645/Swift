@@ -113,7 +113,9 @@ const RideSelectionScreen: React.FC<RideSelectionScreenProps> = ({
                            ) : (
                                <div>
                                    <p className="font-bold text-lg">{formatCurrency(fareInfo?.fare || 0)}</p>
-                                   <p className="text-sm text-gray-500 dark:text-gray-400">{`~${fareInfo?.eta || '--'} min`}</p>
+                                   <p className="text-sm text-gray-500 dark:text-gray-400">
+                                     {fareInfo?.distance || ''}{fareInfo?.distance && fareInfo?.eta ? ' · ' : ''}{fareInfo?.eta ? `~${fareInfo.eta} min` : ''}
+                                   </p>
                                </div>
                            )}
                            

@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { Driver, Location, RideOption, GroundingChunk, ChatMessage } from "../types";
+import { Driver, Location, RideOption, ChatMessage } from "../types";
 
 if (!process.env.API_KEY) {
   // In a real app, this would be a fatal error.
@@ -8,34 +8,6 @@ if (!process.env.API_KEY) {
 }
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
-
-export const getPlaceSuggestions = async (
-  location: { latitude: number; longitude: number }
-): Promise<GroundingChunk[]> => {
-  try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: `Find popular and interesting places nearby. Include a mix of categories like cafes, parks, landmarks, and shopping areas.`,
-      config: {
-        tools: [{ googleMaps: {} }],
-        toolConfig: {
-          retrievalConfig: {
-            latLng: {
-              latitude: location.latitude,
-              longitude: location.longitude,
-            },
-          },
-        },
-      },
-    });
-    
-    return response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
-  } catch (error) {
-    console.error("Error calling Gemini API for suggestions:", error);
-    return [];
-  }
-};
-
 
 export const calculateFare = async (
     pickup: Location,

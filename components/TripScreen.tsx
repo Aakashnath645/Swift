@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import type { Driver, RideOption, Location, ChatMessage, LatLng } from '../types';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import type { Driver, RideOption, Location, ChatMessage, LatLng, TripPhase } from '../types';
 import { StarIcon, PhoneIcon, MessageIcon, PhoneAcceptIcon, PhoneEndIcon, SendIcon } from './icons';
-import LiveMap from './LiveMap';
+import MockMap from './MockMap';
 import { formatCurrency } from '../utils/formatting';
 import { getDriverResponse } from '../services/geminiService';
-import { loadGoogleMapsScript, getDirections } from '../services/googleMapsService';
+import TripProgressIndicator from './TripProgressIndicator';
 
 interface TripScreenProps {
   driver: Driver;
@@ -17,41 +17,114 @@ interface TripScreenProps {
   onTripCancel: () => void;
 }
 
-// Helper to get a point along the polyline
-const getPointAlongPath = (path: google.maps.LatLng[], fraction: number): LatLng | null => {
-  if (!window.google || !window.google.maps.geometry) return null;
-  const totalDistance = google.maps.geometry.spherical.computeLength(path);
-  const distance = fraction * totalDistance;
-  
-  let accumulatedDistance = 0;
-  for (let i = 0; i < path.length - 1; i++) {
-    const segmentStart = path[i];
-    const segmentEnd = path[i + 1];
-    const segmentDistance = google.maps.geometry.spherical.computeLength([segmentStart, segmentEnd]);
-    
-    if (accumulatedDistance + segmentDistance >= distance) {
-      const fractionOfSegment = (distance - accumulatedDistance) / segmentDistance;
-      const point = google.maps.geometry.spherical.interpolate(segmentStart, segmentEnd, fractionOfSegment);
-      return { lat: point.lat(), lng: point.lng() };
+// --- Mock Map Utilities ---
+
+// Generates a more realistic, grid-aligned path with slight organic variations.
+const generateGridRoute = (start: LatLng, end: LatLng): LatLng[] => {
+    const path: LatLng[] = [start];
+    let current = { ...start };
+    const dx = end.lng - start.lng;
+    const dy = end.lat - start.lat;
+
+    const goHorizontalFirst = Math.random() > 0.5;
+
+    if (goHorizontalFirst) {
+        if (Math.abs(dx) > 0.0001) { current.lng = end.lng; path.push({ ...current }); }
+        if (Math.abs(dy) > 0.0001) { current.lat = end.lat; path.push({ ...current }); }
+    } else {
+        if (Math.abs(dy) > 0.0001) { current.lat = end.lat; path.push({ ...current }); }
+        if (Math.abs(dx) > 0.0001) { current.lng = end.lng; path.push({ ...current }); }
     }
-    accumulatedDistance += segmentDistance;
-  }
-  
-  const lastPoint = path[path.length - 1];
-  return { lat: lastPoint.lat(), lng: lastPoint.lng() };
+
+    const detailedPath: LatLng[] = [];
+    for (let i = 0; i < path.length - 1; i++) {
+        detailedPath.push(path[i]);
+        const p1 = path[i];
+        const p2 = path[i + 1];
+        const segDx = p2.lng - p1.lng;
+        const segDy = p2.lat - p1.lat;
+        const dist = Math.sqrt(segDx * segDx + segDy * segDy);
+
+        if (dist > 0.01) {
+            const numMidpoints = 4;
+            for (let j = 1; j <= numMidpoints; j++) {
+                const progress = j / (numMidpoints + 1);
+                let midLat = p1.lat + segDy * progress;
+                let midLng = p1.lng + segDx * progress;
+                const sway = (Math.random() - 0.5) * dist * 0.05;
+                if (Math.abs(segDy) < 0.0001) midLat += sway;
+                else midLng += sway;
+                detailedPath.push({ lat: midLat, lng: midLng });
+            }
+        }
+    }
+    detailedPath.push(path[path.length - 1]);
+    return detailedPath;
+};
+
+
+// Simple linear interpolation
+const interpolate = (p1: LatLng, p2: LatLng, fraction: number): LatLng => {
+  return {
+    lat: p1.lat + (p2.lat - p1.lat) * fraction,
+    lng: p1.lng + (p2.lng - p1.lng) * fraction,
+  };
+};
+
+// Calculate distance between two lat/lng points
+const haversineDistance = (p1: LatLng, p2: LatLng): number => {
+  const R = 6371; // Radius of Earth in km
+  const dLat = (p2.lat - p1.lat) * Math.PI / 180;
+  const dLng = (p2.lng - p1.lng) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(p1.lat * Math.PI / 180) * Math.cos(p2.lat * Math.PI / 180) *
+          Math.sin(dLng/2) * Math.sin(dLng/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+const getPointAlongPath = (path: LatLng[], fraction: number): LatLng | null => {
+    if (path.length < 2) return path[0] || null;
+
+    const totalDistance = path.reduce((acc, point, i) => {
+        if (i === 0) return 0;
+        return acc + haversineDistance(path[i-1], point);
+    }, 0);
+
+    if (totalDistance === 0) return path[0];
+
+    const targetDistance = fraction * totalDistance;
+    let accumulatedDistance = 0;
+
+    for (let i = 0; i < path.length - 1; i++) {
+        const segmentStart = path[i];
+        const segmentEnd = path[i+1];
+        const segmentDistance = haversineDistance(segmentStart, segmentEnd);
+
+        if (accumulatedDistance + segmentDistance >= targetDistance) {
+            if (segmentDistance === 0) return segmentStart;
+            const fractionOfSegment = (targetDistance - accumulatedDistance) / segmentDistance;
+            return interpolate(segmentStart, segmentEnd, fractionOfSegment);
+        }
+        accumulatedDistance += segmentDistance;
+    }
+
+    return path[path.length - 1];
+};
+
+const easeInOutCubic = (t: number): number => {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 };
 
 
 const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, fare, eta: tripEta, onTripEnd, onTripCancel }) => {
   const [tripStatus, setTripStatus] = useState(`Finding the best route...`);
+  const [tripPhase, setTripPhase] = useState<TripPhase>('ARRIVING');
   const [showCancelModal, setShowCancelModal] = useState(false);
 
   // Map state
-  const [mapsReady, setMapsReady] = useState(false);
-  const [routePath, setRoutePath] = useState<google.maps.LatLng[]>([]);
+  const [routePath, setRoutePath] = useState<LatLng[]>([]);
   const [carLocation, setCarLocation] = useState<LatLng | null>(null);
-  const [pickupCoords, setPickupCoords] = useState<LatLng | null>(null);
-  const [dropoffCoords, setDropoffCoords] = useState<LatLng | null>(null);
 
   // Phone call simulation state
   const [callState, setCallState] = useState<'idle' | 'ringing' | 'active'>('idle');
@@ -63,66 +136,67 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
   const [isSending, setIsSending] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    loadGoogleMapsScript()
-      .then(() => setMapsReady(true))
-      .catch(err => console.error("Failed to load Google Maps", err));
-  }, []);
+  const driverInitialLocation = useMemo(() => {
+    const sway = 0.008;
+    return {
+      lat: pickup.lat + (Math.random() - 0.5) * sway,
+      lng: pickup.lng + (Math.random() - 0.5) * sway,
+    }
+  }, [pickup.lat, pickup.lng]);
 
   useEffect(() => {
-    if (!mapsReady) return;
+    const pickupCoords = { lat: pickup.lat, lng: pickup.lng };
+    const dropoffCoords = { lat: dropoff.lat, lng: dropoff.lng };
+    
+    const arrivalPath = generateGridRoute(driverInitialLocation, pickupCoords);
+    const mainTripPath = generateGridRoute(pickupCoords, dropoffCoords);
+    setRoutePath(mainTripPath); // Only show the main path to the user on the map
+    setCarLocation(driverInitialLocation);
 
-    getDirections(pickup.address, dropoff.address).then(result => {
-      if (result) {
-        setRoutePath(result.path);
-        setCarLocation({ lat: result.startLocation.lat(), lng: result.startLocation.lng() });
-        setPickupCoords({ lat: result.startLocation.lat(), lng: result.startLocation.lng() });
-        setDropoffCoords({ lat: result.endLocation.lat(), lng: result.endLocation.lng() });
+    const arrivalDuration = Math.min(5, tripEta) * 1000 * 1.5;
+    const tripDuration = tripEta * 1000 * 1.5;
+    let startTime = Date.now();
+    let frameId: number;
 
-        // Start trip simulation once route is fetched
-        const arrivalDuration = Math.min(5, tripEta) * 1000 * 1.5; // Simulate arrival in up to 5s
-        const tripDuration = tripEta * 1000 * 1.5; // Speed up simulation
-        let startTime = Date.now();
-        let frameId: number;
+    const animate = () => {
+      const now = Date.now();
+      const elapsed = now - startTime;
 
-        const animate = () => {
-          const now = Date.now();
-          const elapsed = now - startTime;
-
-          // Phase 1: Driver to pickup
-          if (elapsed < arrivalDuration) {
-              const progress = elapsed / arrivalDuration;
-              const eta = Math.ceil((arrivalDuration - elapsed) / 1000 / 1.5);
-              setTripStatus(`Driver arriving in ${eta} min`);
-              // Car doesn't move in this phase, stays at pickup.
-          }
-          // Phase 2: Trip to destination
-          else if (elapsed < arrivalDuration + tripDuration) {
-              const tripElapsed = elapsed - arrivalDuration;
-              const progress = tripElapsed / tripDuration;
-              const newPos = getPointAlongPath(result.path, progress);
-              setCarLocation(newPos);
-              const eta = Math.ceil((arrivalDuration + tripDuration - elapsed) / 1000 / 1.5);
-              setTripStatus(`On trip to ${dropoff.address.split(',')[0]} (~${eta} min)`);
-          } 
-          // Phase 3: Arrived
-          else {
-              setTripStatus('You have arrived!');
-              setCarLocation(dropoffCoords);
-              cancelAnimationFrame(frameId);
-              setTimeout(onTripEnd, 2000);
-              return;
-          }
-          frameId = requestAnimationFrame(animate);
-        };
-        
-        frameId = requestAnimationFrame(animate);
-
-        return () => cancelAnimationFrame(frameId);
+      if (elapsed < arrivalDuration) {
+          setTripPhase('ARRIVING');
+          const progress = elapsed / arrivalDuration;
+          const easedProgress = easeInOutCubic(progress);
+          const newPos = getPointAlongPath(arrivalPath, easedProgress);
+          setCarLocation(newPos);
+          const eta = Math.ceil((arrivalDuration - elapsed) / 1000 / 1.5);
+          setTripStatus(`Driver arriving in ~${eta} min`);
       }
-    });
+      else if (elapsed < arrivalDuration + tripDuration) {
+          setTripPhase('EN_ROUTE');
+          const tripElapsed = elapsed - arrivalDuration;
+          const progress = tripElapsed / tripDuration;
+          const easedProgress = easeInOutCubic(progress);
+          const newPos = getPointAlongPath(mainTripPath, easedProgress);
+          setCarLocation(newPos);
+          const eta = Math.ceil((arrivalDuration + tripDuration - elapsed) / 1000 / 1.5);
+          setTripStatus(`On trip to ${dropoff.address.split(',')[0]} (~${eta} min)`);
+      } 
+      else {
+          setTripPhase('ARRIVED');
+          setTripStatus('You have arrived!');
+          setCarLocation(dropoffCoords);
+          cancelAnimationFrame(frameId);
+          setTimeout(onTripEnd, 2000);
+          return;
+      }
+      frameId = requestAnimationFrame(animate);
+    };
+    
+    frameId = requestAnimationFrame(animate);
 
-  }, [mapsReady, pickup.address, dropoff.address, tripEta, onTripEnd, dropoffCoords]);
+    return () => cancelAnimationFrame(frameId);
+
+  }, [pickup, dropoff, tripEta, onTripEnd, driverInitialLocation]);
 
 
   useEffect(() => {
@@ -162,26 +236,26 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
-  const inProgress = carLocation !== pickupCoords;
-
   return (
     <div className="flex-1 flex flex-col lg:flex-row bg-white dark:bg-gray-900">
         <div className="h-2/5 lg:h-full lg:w-3/5">
-             <LiveMap 
-                pickup={pickupCoords}
-                dropoff={dropoffCoords}
+             <MockMap 
+                pickup={{ lat: pickup.lat, lng: pickup.lng }}
+                dropoff={{ lat: dropoff.lat, lng: dropoff.lng }}
                 carLocation={carLocation}
                 routePath={routePath}
              />
         </div>
         <div className="flex-1 p-4 -mt-16 lg:mt-0 rounded-t-3xl lg:rounded-none bg-white dark:bg-gray-900 flex flex-col justify-between lg:w-2/5 lg:border-l lg:border-gray-200 dark:lg:border-gray-700">
             <div>
-                <div className="text-center mb-4">
+                <div className="text-center mb-2">
                     <h2 className="text-xl font-bold">{tripStatus}</h2>
-                    {!inProgress && <p className="text-gray-500 dark:text-gray-400">Pickup at {pickup.address}</p>}
+                    {tripPhase === 'ARRIVING' && <p className="text-sm text-gray-500 dark:text-gray-400">Pickup at {pickup.address}</p>}
                 </div>
 
-                <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg space-y-4">
+                <TripProgressIndicator phase={tripPhase} />
+
+                <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg space-y-4 mt-2">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                             <img src={driver.avatarUrl} alt={driver.name} className="w-16 h-16 rounded-full"/>

@@ -2,6 +2,7 @@ import type React from 'react';
 
 export enum Screen {
   SPLASH,
+  ONBOARDING,
   LOGIN,
   SIGNUP,
   HOME, // Represents the main app view with the navigation bar
@@ -22,6 +23,8 @@ export enum Page {
 
 export type Theme = 'light' | 'dark';
 
+export type TripPhase = 'ARRIVING' | 'EN_ROUTE' | 'ARRIVED';
+
 export interface LatLng {
   lat: number;
   lng: number;
@@ -29,8 +32,8 @@ export interface LatLng {
 
 export interface Location {
   address: string;
-  lat?: number;
-  lng?: number;
+  lat: number;
+  lng: number;
 }
 
 export interface RideOption {

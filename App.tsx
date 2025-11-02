@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Screen, Page, RideOption, Driver, Location, User, PaymentMethod, AppSettings, TripRecord, Theme } from './types';
 import SplashScreen from './components/SplashScreen';
+import OnboardingScreen from './components/OnboardingScreen';
 import LoginScreen from './components/LoginScreen';
 import SignUpScreen from './components/SignUpScreen';
 import HomeScreen from './components/HomeScreen';
@@ -47,7 +48,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (screen === Screen.SPLASH) {
-      const timer = setTimeout(() => setScreen(Screen.LOGIN), 2500);
+      const timer = setTimeout(() => setScreen(Screen.ONBOARDING), 2500);
       return () => clearTimeout(timer);
     }
   }, [screen]);
@@ -64,6 +65,14 @@ const App: React.FC = () => {
   const handleSignUp = useCallback(() => {
     setScreen(Screen.HOME);
     setPage(Page.HOME);
+  }, []);
+
+  const handleNavigateToLogin = useCallback(() => {
+    setScreen(Screen.LOGIN);
+  }, []);
+  
+  const handleNavigateToSignUp = useCallback(() => {
+    setScreen(Screen.SIGNUP);
   }, []);
 
   const handleSwitchToSignUp = useCallback(() => {
@@ -104,7 +113,13 @@ const App: React.FC = () => {
   }, []);
 
   const handleLocationsSet = useCallback((pickup: Location, dropoff: Location) => {
-    setPickupLocation(pickup);
+    // Ensure pickup has coordinates. If it's the default "current location", add mock coordinates.
+    const finalPickup: Location = {
+        ...pickup,
+        lat: pickup.lat || 37.7749, // Default to SF if not provided
+        lng: pickup.lng || -122.4194,
+    };
+    setPickupLocation(finalPickup);
     setDropoffLocation(dropoff);
     setScreen(Screen.SELECTING_RIDE);
   }, []);
@@ -192,6 +207,8 @@ const App: React.FC = () => {
     switch (screen) {
       case Screen.SPLASH:
         return <SplashScreen />;
+      case Screen.ONBOARDING:
+        return <OnboardingScreen onNavigateToLogin={handleNavigateToLogin} onNavigateToSignUp={handleNavigateToSignUp} />;
       case Screen.LOGIN:
         return <LoginScreen onLogin={handleLogin} onSwitchToSignUp={handleSwitchToSignUp} />;
       case Screen.SIGNUP:

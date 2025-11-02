@@ -1,5 +1,5 @@
 import React from 'react';
-import type { RideOption, Driver, User, PaymentMethod, AppSettings } from './types';
+import type { RideOption, Driver, User, PaymentMethod, AppSettings, Location } from './types';
 import { CarIcon, PersonIcon, ZapIcon } from './components/icons';
 
 export const rideOptions: RideOption[] = [
@@ -76,3 +76,12 @@ export const initialAppSettings: AppSettings = {
     pushNotifications: true,
     emailNotifications: false,
 };
+
+export const mockLandmarks: Location[] = [
+    { address: 'Coit Tower', lat: 37.8024, lng: -122.4058 },
+    { address: 'Golden Gate Bridge', lat: 37.8199, lng: -122.4783 },
+    { address: 'Fisherman\'s Wharf', lat: 37.8080, lng: -122.4177 },
+    { address: 'Alcatraz Island', lat: 37.8270, lng: -122.4230 },
+    { address: 'The Castro Theatre', lat: 37.7621, lng: -122.4347 },
+    { address: 'Oracle Park', lat: 37.7786, lng: -122.3893 },
+];
