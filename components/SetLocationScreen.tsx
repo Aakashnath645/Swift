@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Location } from '../types';
 import { LocationMarkerIcon, MapPinIcon } from './icons';
 import PageHeader from './PageHeader';
-import { mockLandmarks } from '../constants';
+import { getPlaceSuggestions } from '../services/geminiService';
 
 interface SetLocationScreenProps {
   onBack: () => void;
@@ -17,7 +17,17 @@ const SetLocationScreen: React.FC<SetLocationScreenProps> = ({ onBack, onLocatio
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Get user's current location to set as default pickup
+    const fetchSuggestions = async (coords: { latitude: number, longitude: number }) => {
+        try {
+            const geminiSuggestions = await getPlaceSuggestions({ lat: coords.latitude, lng: coords.longitude });
+            setSuggestions(geminiSuggestions);
+        } catch (err) {
+            setError('Could not fetch suggestions.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -26,15 +36,11 @@ const SetLocationScreen: React.FC<SetLocationScreenProps> = ({ onBack, onLocatio
               lat: position.coords.latitude,
               lng: position.coords.longitude
           });
-          // Use a timeout to simulate network request for suggestions
-          setTimeout(() => {
-              setSuggestions(mockLandmarks);
-              setIsLoading(false);
-          }, 800);
+          fetchSuggestions(position.coords);
         },
         (err) => {
           console.warn(`GEO ERROR(${err.code}): ${err.message}`);
-          setError('Please enable location services.');
+          setError('Please enable location services to get suggestions.');
           setPickup({ address: '', lat: 0, lng: 0}); // Force user to enter pickup manually
           setIsLoading(false);
         }

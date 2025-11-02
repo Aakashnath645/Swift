@@ -2,6 +2,7 @@ import React from 'react';
 import { AppSettings, Theme } from '../types';
 import PageHeader from './PageHeader';
 import { usePlatform } from '../hooks/usePlatform';
+import { ChevronRightIcon } from './icons';
 
 interface SettingsScreenProps {
   settings: AppSettings;
@@ -9,9 +10,10 @@ interface SettingsScreenProps {
   onBack: () => void;
   theme: Theme;
   onThemeToggle: () => void;
+  onNavigateToLegal: (type: 'terms' | 'cancellation') => void;
 }
 
-const SettingsScreen: React.FC<SettingsScreenProps> = ({ settings, onUpdate, onBack, theme, onThemeToggle }) => {
+const SettingsScreen: React.FC<SettingsScreenProps> = ({ settings, onUpdate, onBack, theme, onThemeToggle, onNavigateToLegal }) => {
 
   const handleToggle = (key: keyof AppSettings) => {
     onUpdate({ ...settings, [key]: !settings[key] });
@@ -44,6 +46,11 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ settings, onUpdate, onB
                 isEnabled={settings.emailNotifications}
                 onToggle={() => handleToggle('emailNotifications')}
             />
+        </div>
+         <div className="space-y-4">
+            <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">Legal</h2>
+            <SettingsLink label="Terms & Conditions" onClick={() => onNavigateToLegal('terms')} />
+            <SettingsLink label="Cancellation Policy" onClick={() => onNavigateToLegal('cancellation')} />
         </div>
       </main>
     </div>
@@ -106,5 +113,19 @@ const SettingsToggle: React.FC<SettingsToggleProps> = ({ label, description, isE
         </div>
     );
 };
+
+
+interface SettingsLinkProps {
+    label: string;
+    onClick: () => void;
+}
+
+const SettingsLink: React.FC<SettingsLinkProps> = ({ label, onClick }) => (
+    <button onClick={onClick} className="w-full flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+        <span className="font-semibold">{label}</span>
+        <ChevronRightIcon className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+    </button>
+);
+
 
 export default SettingsScreen;

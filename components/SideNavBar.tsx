@@ -15,7 +15,7 @@ const navItems = [
 
 const SideNavBar: React.FC<SideNavBarProps> = ({ activePage, onNavigate }) => {
   return (
-    <nav className="hidden lg:flex flex-col w-20 bg-gray-900 dark:bg-black p-4 justify-between items-center" aria-label="Main navigation">
+    <nav className="hidden lg:flex flex-col w-24 bg-gray-900 dark:bg-black p-4 justify-between items-center" aria-label="Main navigation">
       <div>
         <div className="p-2 mb-8">
             <Logo className="w-10 h-10 text-cyan-400" />

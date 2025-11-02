@@ -1,5 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { Driver, Location, RideOption, ChatMessage } from "../types";
+import { Driver, Location, RideOption, ChatMessage, LatLng } from "../types";
+import { mockLandmarks } from "../constants";
 
 if (!process.env.API_KEY) {
   // In a real app, this would be a fatal error.
@@ -102,3 +103,41 @@ export const getDriverResponse = async (userMessage: string, driverName: string,
         return "Sorry, I can't talk right now, focusing on the road!";
     }
 };
+
+export const getPlaceSuggestions = async (location: LatLng): Promise<Location[]> => {
+    const prompt = `
+        Based on the user's current location (Latitude: ${location.lat}, Longitude: ${location.lng}), suggest 6 interesting and popular places to visit in San Francisco, CA.
+        Include a mix of landmarks, restaurants, and parks.
+        Return the result as a JSON array where each object has the exact keys "address" (string, full name of the place), "lat" (number), and "lng" (number).
+    `;
+
+    try {
+         const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: prompt,
+            config: {
+                responseMimeType: "application/json",
+                responseSchema: {
+                    type: Type.ARRAY,
+                    items: {
+                        type: Type.OBJECT,
+                        properties: {
+                            address: { type: Type.STRING },
+                            lat: { type: Type.NUMBER },
+                            lng: { type: Type.NUMBER },
+                        },
+                    },
+                },
+            },
+        });
+
+        const jsonText = response.text.trim();
+        const data = JSON.parse(jsonText);
+        return data;
+
+    } catch (error) {
+        console.error("Error getting place suggestions from Gemini:", error);
+        // Fallback to mock data if the API call fails
+        return mockLandmarks;
+    }
+}

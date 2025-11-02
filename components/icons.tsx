@@ -167,12 +167,9 @@ export const CreditCardIcon: React.FC<IconProps> = (props) => (
 
 export const SettingsIcon: React.FC<IconProps> = (props) => (
   <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M19.435 12.0001C19.435 11.2331 19.349 10.4741 19.182 9.73913M19.182 9.73913C18.999 8.94813 18.558 8.22313 17.913 7.66213C17.268 7.10113 16.45 6.74913 15.565 6.65713" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M12 15.25C13.7949 15.25 15.25 13.7949 15.25 12C15.25 10.2051 13.7949 8.75 12 8.75C10.2051 8.75 8.75 10.2051 8.75 12C8.75 13.7949 10.2051 15.25 12 15.25Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M4.81802 14.261C4.65102 13.526 4.56502 12.767 4.56502 12C4.56502 11.233 4.65102 10.474 4.81802 9.73898M4.81802 9.73898C5.00102 8.94798 5.44202 8.22298 6.08702 7.66198C6.73202 7.10098 7.55002 6.74898 8.43502 6.65698" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M14.261 19.182C13.526 19.349 12.767 19.435 12 19.435C11.233 19.435 10.474 19.349 9.73898 19.182M9.73898 19.182C8.94798 18.999 8.22298 18.558 7.66198 17.913C7.10098 17.268 6.74898 16.45 6.65698 15.565" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M17.343 6.65698C16.45 6.74898 15.725 6.30798 15.164 5.66298C14.603 5.01798 14.251 4.19998 14.159 3.31498C14.067 2.42998 14.508 1.50498 15.153 0.85998" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-</svg>
+    <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></circle>
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+  </svg>
 );
 
 export const HelpCircleIcon: React.FC<IconProps> = (props) => (

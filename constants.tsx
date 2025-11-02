@@ -85,3 +85,21 @@ export const mockLandmarks: Location[] = [
     { address: 'The Castro Theatre', lat: 37.7621, lng: -122.4347 },
     { address: 'Oracle Park', lat: 37.7786, lng: -122.3893 },
 ];
+
+export const TERMS_AND_CONDITIONS = `
+    <h2>1. Introduction</h2>
+    <p>Welcome to Swift. These are the terms and conditions governing your access to and use of the Swift application.</p>
+    <h2>2. User Obligations</h2>
+    <p>You agree to use the app in compliance with all applicable laws and regulations. You are responsible for maintaining the confidentiality of your account information.</p>
+    <h2>3. Limitation of Liability</h2>
+    <p>Swift is a simulation application. We are not liable for any damages or losses arising from your use or inability to use the service.</p>
+`;
+
+export const CANCELLATION_POLICY = `
+    <h2>1. Cancellation Fees</h2>
+    <p>A cancellation fee may be charged if you cancel a trip after a driver has already been dispatched and is on their way to your pickup location.</p>
+    <h2>2. How to Cancel</h2>
+    <p>You can cancel a trip at any time before it begins through the app. Navigate to the trip screen and select the "Cancel Trip" option.</p>
+    <h2>3. Disputes</h2>
+    <p>If you believe you were unfairly charged a cancellation fee, you may contact our support team through the Help section of the app.</p>
+`;

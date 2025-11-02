@@ -12,7 +12,10 @@ export enum Screen {
   EDIT_PROFILE,
   PAYMENT_METHODS,
   SETTINGS,
-  HELP
+  HELP,
+  PAYMENT,
+  RATING,
+  LEGAL,
 }
 
 export enum Page {
@@ -81,6 +84,7 @@ export interface TripRecord {
   fare: number;
   date: string; // ISO string
   rideName: string;
+  driver?: Driver; // Add driver for rating screen purposes
 }
 
 
