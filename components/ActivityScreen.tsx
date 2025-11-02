@@ -10,7 +10,7 @@ interface ActivityScreenProps {
 const ActivityScreen: React.FC<ActivityScreenProps> = ({ tripHistory }) => {
   return (
     <div className="h-full flex flex-col bg-white dark:bg-gray-900">
-        <main className="flex-1 p-4 overflow-y-auto pt-20 lg:pt-4">
+        <main className="flex-1 p-4 overflow-y-auto pt-20 lg:pt-4 pb-20 lg:pb-4">
             {tripHistory.length === 0 ? (
                  <div className="h-full flex flex-col items-center justify-center text-center text-gray-400 dark:text-gray-500">
                     <ReceiptIcon className="w-16 h-16 mb-4" />

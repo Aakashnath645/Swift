@@ -1,7 +1,6 @@
 import React from 'react';
 import { Page } from '../types';
 import { HomeIcon, ReceiptIcon, PersonIcon } from './icons';
-import { usePlatform } from '../hooks/usePlatform';
 
 interface BottomNavBarProps {
   activePage: Page;
@@ -15,11 +14,12 @@ const navItems = [
 ];
 
 const BottomNavBar: React.FC<BottomNavBarProps> = ({ activePage, onNavigate }) => {
-  const platform = usePlatform();
-  const navBarClass = 'bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-200/50 dark:border-gray-700/50';
-
   return (
-    <nav className={`flex justify-around items-center ${navBarClass} py-2 lg:hidden`} aria-label="Main navigation">
+    <nav
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      className="fixed bottom-0 left-0 right-0 h-16 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md flex justify-around items-center border-t border-gray-200/50 dark:border-gray-700/50 z-30 lg:hidden"
+      aria-label="Main navigation"
+    >
       {navItems.map((item) => {
         const isActive = activePage === item.page;
         return (
@@ -27,12 +27,13 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ activePage, onNavigate }) =
             key={item.label}
             onClick={() => onNavigate(item.page)}
             aria-current={isActive ? 'page' : undefined}
-            className={`flex flex-col items-center justify-center w-1/3 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-500 rounded-md py-1 ${
-              isActive ? 'text-cyan-600 dark:text-cyan-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300'
+            className={`relative flex flex-col items-center justify-center h-full w-1/3 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-500 rounded-lg ${
+              isActive ? 'text-cyan-600 dark:text-cyan-400' : 'text-gray-500 dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/10'
             }`}
           >
-            <item.icon className="w-6 h-6 mb-1" />
-            <span className="text-xs font-medium">{item.label}</span>
+            <div className={`absolute top-0 bottom-0 left-2 right-2 rounded-lg transition-colors ${isActive ? 'bg-cyan-500/10' : ''}`} />
+            <item.icon className="w-6 h-6" />
+            <span className="text-xs font-bold mt-1">{item.label}</span>
           </button>
         );
       })}

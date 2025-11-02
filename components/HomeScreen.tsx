@@ -17,8 +17,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ user, savedPlaces, onLocationsS
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
   const dragState = useRef({ isDragging: false, startY: 0, endY: 0, panelHeight: 0 });
 
-  const COLLAPSED_HEIGHT = 150;
-  const EXPANDED_HEIGHT_VH = 80; // 80vh
+  const COLLAPSED_HEIGHT = 120; // Reduced from 150
+  const EXPANDED_HEIGHT_VH = 70; // Reduced from 80
   const panelHeight = isPanelExpanded ? `${EXPANDED_HEIGHT_VH}vh` : `${COLLAPSED_HEIGHT}px`;
 
   // --- Location State & Logic (from SetLocationScreen) ---
@@ -151,7 +151,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ user, savedPlaces, onLocationsS
   const showExpandedView = isPanelExpanded || isDesktop;
 
   return (
-    <div className="h-full flex flex-col lg:flex-row bg-white dark:bg-gray-900">
+    <div className="h-full flex flex-col lg:flex-row bg-white dark:bg-gray-900 pb-20 lg:pb-0">
       <style>{`
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

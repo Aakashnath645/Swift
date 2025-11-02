@@ -111,10 +111,6 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
   const dragState = useRef({ isDragging: false, startY: 0, endY: 0 });
   
-  const COLLAPSED_HEIGHT = 90;
-  const EXPANDED_HEIGHT = 480;
-  const panelHeight = isPanelExpanded ? EXPANDED_HEIGHT : COLLAPSED_HEIGHT;
-
   useEffect(() => {
     const checkDesktop = () => setIsDesktop(window.innerWidth >= 1024);
     window.addEventListener('resize', checkDesktop);
@@ -224,6 +220,11 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
+  const panelClasses = isDesktop 
+    ? "lg:w-2/5 lg:h-auto"
+    : `transition-all duration-300 ease-in-out ${isPanelExpanded ? 'h-[70vh] max-h-[500px]' : 'h-24'}`;
+
+
   return (
     <div className="flex-1 flex flex-col lg:flex-row bg-white dark:bg-gray-900 relative overflow-hidden">
         <div className="flex-1 lg:w-3/5 min-h-0">
@@ -236,8 +237,7 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
         </div>
         
         <div 
-            style={{ height: isDesktop ? 'auto' : `${panelHeight}px` }}
-            className={`bg-white dark:bg-gray-900 rounded-t-3xl shadow-2xl-top-light dark:shadow-2xl-top-dark z-10 lg:w-2/5 lg:h-auto lg:rounded-none lg:shadow-none lg:border-l lg:border-gray-200 dark:lg:border-gray-700 flex flex-col flex-shrink-0 transition-all duration-300 ease-in-out`}
+            className={`bg-white dark:bg-gray-900 rounded-t-3xl shadow-2xl-top-light dark:shadow-2xl-top-dark z-10 lg:rounded-none lg:shadow-none lg:border-l lg:border-gray-200 dark:lg:border-gray-700 flex flex-col flex-shrink-0 ${panelClasses}`}
         >
             <div
                 onMouseDown={handleDragStart}

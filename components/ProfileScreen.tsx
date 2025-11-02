@@ -22,8 +22,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
     onNavigateToSavedPlaces,
 }) => {
   return (
-    <div className="h-full flex flex-col bg-white dark:bg-gray-900 text-black dark:text-white p-6 lg:p-8 pt-20 lg:pt-8">
-      <div className="lg:grid lg:grid-cols-5 lg:gap-8 h-full">
+    <div className="h-full flex flex-col bg-white dark:bg-gray-900 text-black dark:text-white p-6 pt-20 pb-20 lg:p-8 lg:pt-8 overflow-y-auto">
+      <div className="lg:grid lg:grid-cols-5 lg:gap-8 flex-1 flex flex-col">
         {/* Left Column: Profile Info & Stats */}
         <div className="lg:col-span-2 space-y-8">
             {/* Profile Header */}
@@ -49,7 +49,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
         </div>
 
         {/* Right Column: Menu Options & Logout */}
-        <div className="lg:col-span-3 flex flex-col justify-between mt-8 lg:mt-0">
+        <div className="lg:col-span-3 flex flex-col justify-between mt-8 lg:mt-0 flex-1">
           <div className="space-y-2">
               <ProfileMenuItem icon={<PersonIcon className="w-6 h-6 text-gray-500 dark:text-gray-400" />} label="Edit Profile" onClick={onNavigateToEditProfile} />
               <ProfileMenuItem icon={<BookmarkIcon className="w-6 h-6 text-gray-500 dark:text-gray-400" />} label="Saved Places" onClick={onNavigateToSavedPlaces} />
@@ -61,7 +61,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
           {/* Logout Button */}
           <button
             onClick={onLogout}
-            className="w-full flex items-center justify-center space-x-2 py-3 bg-red-600 text-white rounded-lg font-semibold border-b-4 border-red-700 hover:bg-red-500 hover:border-red-600 active:border-b-0 active:translate-y-1 transition-all duration-150 ease-in-out mt-4"
+            className="w-full flex items-center justify-center space-x-2 py-3 bg-red-600 text-white rounded-lg font-semibold border-b-4 border-red-700 hover:bg-red-500 hover:border-red-600 active:border-b-0 active:translate-y-1 transition-all duration-150 ease-in-out mt-8 lg:mt-4"
           >
             <LogOutIcon className="w-6 h-6" />
             <span>Log Out</span>
