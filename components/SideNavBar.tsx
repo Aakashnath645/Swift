@@ -28,7 +28,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ activePage, onNavigate }) => {
                 key={item.label}
                 onClick={() => onNavigate(item.page)}
                 aria-current={isActive ? 'page' : undefined}
-                className={`relative flex flex-col items-center justify-center w-full p-3 rounded-lg transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-500 ${
+                className={`relative flex flex-col items-center justify-center w-full p-3 rounded-lg transition-colors duration-200 ease-in-out focus:outline-none ${
                   isActive ? 'bg-cyan-500/20 text-cyan-400' : 'text-gray-400 hover:bg-gray-700/50 hover:text-white'
                 }`}
                 title={item.label}

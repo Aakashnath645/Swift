@@ -27,7 +27,7 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ activePage, onNavigate }) =
             key={item.label}
             onClick={() => onNavigate(item.page)}
             aria-current={isActive ? 'page' : undefined}
-            className={`relative flex flex-col items-center justify-center h-full w-1/3 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-500 rounded-lg ${
+            className={`relative flex flex-col items-center justify-center h-full w-1/3 transition-colors duration-200 ease-in-out focus:outline-none ${
               isActive ? 'text-cyan-600 dark:text-cyan-400' : 'text-gray-500 dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/10'
             }`}
           >
