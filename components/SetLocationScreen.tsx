@@ -118,7 +118,7 @@ const SetLocationScreen: React.FC<SetLocationScreenProps> = ({ onBack, onLocatio
             <button
                 onClick={handleConfirm}
                 disabled={!pickup.address || !dropoff}
-                className="w-full py-4 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold text-white transition-colors disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 text-lg"
+                className="w-full py-3 bg-cyan-600 text-white rounded-lg font-semibold text-lg border-b-4 border-cyan-700 hover:bg-cyan-500 hover:border-cyan-600 active:border-b-0 active:translate-y-1 transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 dark:focus:ring-offset-gray-900 disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:border-b-4 disabled:border-gray-500 dark:disabled:border-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed disabled:translate-y-0"
                 >
                 Confirm Locations
             </button>

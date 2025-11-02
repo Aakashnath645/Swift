@@ -53,7 +53,7 @@ const PaymentMethodsScreen: React.FC<PaymentMethodsScreenProps> = ({ paymentMeth
         </div>
         <button
             onClick={handleAddMethod}
-            className="w-full py-3 mt-4 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold text-white transition-colors"
+            className="w-full py-3 mt-4 bg-cyan-600 text-white rounded-lg font-semibold border-b-4 border-cyan-700 hover:bg-cyan-500 hover:border-cyan-600 active:border-b-0 active:translate-y-1 transition-all duration-150 ease-in-out"
         >
             Add New Card
         </button>

@@ -34,6 +34,8 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onNavigateToLogin, 
     }
   };
 
+  const primaryButtonClasses = "w-full py-4 bg-cyan-600 text-white rounded-lg font-semibold border-b-4 border-cyan-700 hover:bg-cyan-500 hover:border-cyan-600 active:border-b-0 active:translate-y-1 transition-all duration-150 ease-in-out";
+
   return (
     <div className="flex-1 flex flex-col justify-between p-6 bg-white dark:bg-gray-900 animate-fadeIn">
       <div className="h-10 text-right">
@@ -86,13 +88,13 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onNavigateToLogin, 
             <div className="space-y-3">
               <button
                 onClick={onNavigateToSignUp}
-                className="w-full py-4 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold text-white transition-colors shadow-lg"
+                className={primaryButtonClasses}
               >
                 Create an Account
               </button>
               <button
                 onClick={onNavigateToLogin}
-                className="w-full py-3 bg-transparent font-semibold text-black dark:text-white"
+                className="w-full py-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-lg font-semibold text-black dark:text-white"
               >
                 Sign In
               </button>
@@ -100,7 +102,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onNavigateToLogin, 
           ) : (
             <button
               onClick={handleNext}
-              className="w-full py-4 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold text-white transition-colors shadow-lg"
+              className={primaryButtonClasses}
             >
               Next
             </button>

@@ -282,14 +282,14 @@ const TripScreen: React.FC<TripScreenProps> = ({ driver, ride, pickup, dropoff, 
             <div className="flex items-center space-x-3 mt-4">
                 <button 
                     onClick={() => setShowCancelModal(true)}
-                    className="flex-1 py-3 bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-800/50 dark:text-red-300 dark:hover:bg-red-800/80 rounded-lg font-semibold transition-colors"
+                    className="flex-1 py-3 bg-red-600 text-white rounded-lg font-semibold border-b-4 border-red-700 hover:bg-red-500 hover:border-red-600 active:border-b-0 active:translate-y-1 transition-all duration-150 ease-in-out"
                 >
                     Cancel Trip
                 </button>
-                <button onClick={() => setIsChatOpen(true)} className="p-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                <button onClick={() => setIsChatOpen(true)} className="p-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-lg transition-colors border-b-4 border-gray-300 dark:border-gray-900 active:border-b-0 active:translate-y-1">
                     <MessageIcon className="w-6 h-6"/>
                 </button>
-                <button onClick={() => setCallState('ringing')} className="p-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                <button onClick={() => setCallState('ringing')} className="p-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-lg transition-colors border-b-4 border-gray-300 dark:border-gray-900 active:border-b-0 active:translate-y-1">
                     <PhoneIcon className="w-6 h-6"/>
                 </button>
             </div>

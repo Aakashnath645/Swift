@@ -58,7 +58,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
           {/* Logout Button */}
           <button
             onClick={onLogout}
-            className="w-full flex items-center justify-center space-x-2 py-3 bg-red-100 text-red-700 dark:bg-red-600/20 dark:text-red-400 rounded-lg font-semibold hover:bg-red-200 dark:hover:bg-red-600/40 transition-colors mt-4"
+            className="w-full flex items-center justify-center space-x-2 py-3 bg-red-600 text-white rounded-lg font-semibold border-b-4 border-red-700 hover:bg-red-500 hover:border-red-600 active:border-b-0 active:translate-y-1 transition-all duration-150 ease-in-out mt-4"
           >
             <LogOutIcon className="w-6 h-6" />
             <span>Log Out</span>

@@ -129,7 +129,7 @@ const RideSelectionScreen: React.FC<RideSelectionScreenProps> = ({
              <button
                 onClick={handleConfirmRide}
                 disabled={!selectedRideId || !fares[selectedRideId] || fares[selectedRideId].isLoading}
-                className="w-full py-4 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-semibold text-white transition-colors disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-500 dark:disabled:text-gray-400 flex items-center justify-center text-lg"
+                className="w-full py-3 bg-cyan-600 text-white rounded-lg font-semibold text-lg border-b-4 border-cyan-700 hover:bg-cyan-500 hover:border-cyan-600 active:border-b-0 active:translate-y-1 transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 dark:focus:ring-offset-gray-900 disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:border-b-4 disabled:border-gray-500 dark:disabled:border-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 disabled:cursor-not-allowed disabled:translate-y-0 flex items-center justify-center"
             >
                 Confirm {rideOptions.find(r => r.id === selectedRideId)?.name || 'Ride'}
                 <ArrowRightIcon className="w-6 h-6 ml-2" />
