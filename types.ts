@@ -22,6 +22,11 @@ export enum Page {
 
 export type Theme = 'light' | 'dark';
 
+export interface LatLng {
+  lat: number;
+  lng: number;
+}
+
 export interface Location {
   address: string;
   lat?: number;

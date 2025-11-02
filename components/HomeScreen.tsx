@@ -1,7 +1,7 @@
-import React from 'react';
-import type { User } from '../types';
+import React, { useState, useEffect } from 'react';
+import type { User, LatLng } from '../types';
 import { LocationMarkerIcon } from './icons';
-import AnimatedMapPlaceholder from './AnimatedMapPlaceholder';
+import LiveMap from './LiveMap';
 
 interface HomeScreenProps {
   user: User;
@@ -9,6 +9,27 @@ interface HomeScreenProps {
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ user, onNavigateToSetLocation }) => {
+  const [currentLocation, setCurrentLocation] = useState<LatLng | null>(null);
+
+  useEffect(() => {
+    // Get user's current location to center the map
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCurrentLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          // Fallback to a default location if permission is denied
+          setCurrentLocation({ lat: 37.7749, lng: -122.4194 }); 
+        }
+      );
+    }
+  }, []);
+
 
   return (
     <div className="h-full flex flex-col lg:flex-row bg-white dark:bg-gray-900">
@@ -19,7 +40,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ user, onNavigateToSetLocation }
       
       <div className="flex-1 relative lg:order-2">
         <div className="absolute inset-0">
-          <AnimatedMapPlaceholder status="idle" />
+          <LiveMap center={currentLocation} />
         </div>
         <div className="absolute top-0 left-0 right-0 p-4 pt-8 bg-gradient-to-b from-white via-white/70 to-transparent dark:from-gray-900 dark:via-gray-900/70 lg:hidden">
           <h1 className="text-3xl font-bold text-black dark:text-white">Swift</h1>
