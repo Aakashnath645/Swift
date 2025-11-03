@@ -3,7 +3,7 @@ import { Logo } from './icons';
 import { usePlatform } from '../hooks/usePlatform';
 
 interface SignUpScreenProps {
-  onSignUp: () => void;
+  onSignUp: (details: { name: string, email: string, password: string }) => void;
   onSwitchToLogin: () => void;
 }
 
@@ -20,7 +20,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onSwitchToLogin }
     setIsLoading(true);
     // Simulate API call
     setTimeout(() => {
-      onSignUp();
+      onSignUp({ name, email, password });
     }, 1500);
   };
 

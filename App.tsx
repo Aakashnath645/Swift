@@ -81,17 +81,34 @@ const App: React.FC = () => {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
   }, []);
 
-  const handleLogin = useCallback(() => {
-    const loggedInUser = { ...mockUser, name: 'Alex Doe' }; // Simulate fetching a real user
-    setUser(loggedInUser);
-    setSavedPlaces(localStorageService.getSavedPlaces()); // Load places on login
-    localStorageService.saveUser(loggedInUser);
+  const handleLogin = useCallback(async (details: { email: string, password: string }): Promise<string | null> => {
+    const storedUser = localStorageService.getUser();
+
+    if (!storedUser || storedUser.email.toLowerCase() !== details.email.toLowerCase()) {
+      return "Account not found. Please check your email or sign up.";
+    }
+    
+    if (storedUser.password !== details.password) {
+      return "Incorrect password. Please try again.";
+    }
+
+    // Login successful
+    setUser(storedUser);
+    setSavedPlaces(localStorageService.getSavedPlaces());
     setScreen(Screen.HOME);
     setPage(Page.HOME);
+    return null; // No error
   }, []);
   
-  const handleSignUp = useCallback(() => {
-    const newUser = { ...mockUser, name: 'New User' }; // Simulate creating a new user
+  const handleSignUp = useCallback((details: { name: string; email: string; password: string; }) => {
+    const newUser: User = { 
+        ...mockUser, // for avatarUrl
+        name: details.name,
+        email: details.email,
+        password: details.password,
+        totalRides: 0,
+        rating: 0,
+    };
     setUser(newUser);
     localStorageService.saveUser(newUser);
     setScreen(Screen.HOME);
@@ -220,7 +237,13 @@ const App: React.FC = () => {
         let newRating = user.rating;
 
         if (rating > 0) {
-            newRating = ((user.rating * user.totalRides) + rating) / newTotalRides;
+            // If it's the first ride, the rating is just the new rating.
+            // Otherwise, calculate the new average.
+            if (user.totalRides === 0) {
+                newRating = rating;
+            } else {
+                newRating = ((user.rating * user.totalRides) + rating) / newTotalRides;
+            }
         }
         
         const updatedUser: User = {
@@ -412,12 +435,10 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-100 dark:bg-gray-800 flex items-center justify-center p-0 lg:p-4">
-      <div className="w-full h-screen lg:h-[calc(100vh-2rem)] max-w-7xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-sans lg:rounded-2xl shadow-xl flex overflow-hidden">
-        {screen === Screen.HOME && <SideNavBar activePage={page} onNavigate={setPage} />}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {renderScreen()}
-        </div>
+    <div className="w-full h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-sans flex overflow-hidden">
+      {screen === Screen.HOME && <SideNavBar activePage={page} onNavigate={setPage} />}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {renderScreen()}
       </div>
     </div>
   );

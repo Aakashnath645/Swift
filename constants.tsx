@@ -78,8 +78,8 @@ export const mockUser: User = {
   name: 'Alex Doe',
   email: 'alex.doe@example.com',
   avatarUrl: 'https://picsum.photos/id/1027/200/200',
-  totalRides: 42,
-  rating: 4.95,
+  totalRides: 0,
+  rating: 0,
 };
 
 export const initialPaymentMethods: PaymentMethod[] = [

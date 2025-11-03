@@ -3,7 +3,7 @@ import { Logo } from './icons';
 import { usePlatform } from '../hooks/usePlatform';
 
 interface LoginScreenProps {
-  onLogin: () => void;
+  onLogin: (details: { email: string, password: string }) => Promise<string | null>;
   onSwitchToSignUp: () => void;
 }
 
@@ -11,15 +11,18 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onSwitchToSignUp }) 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const platform = usePlatform();
 
-  const handleLoginClick = (e: React.FormEvent) => {
+  const handleLoginClick = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      onLogin();
-    }, 1500);
+    const loginError = await onLogin({ email, password });
+    setIsLoading(false);
+    if (loginError) {
+        setError(loginError);
+    }
   };
 
   const inputClasses = platform === 'ios' 
@@ -37,6 +40,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onSwitchToSignUp }) 
                 <p className="text-gray-500 dark:text-gray-400 mt-2">Sign in to continue</p>
             </div>
             <form onSubmit={handleLoginClick} className="space-y-4">
+                {error && (
+                    <div className="p-3 bg-red-100 dark:bg-red-900/50 border border-red-400 text-red-700 dark:text-red-300 rounded-lg text-center text-sm">
+                        {error}
+                    </div>
+                )}
                 <input
                     type="email"
                     placeholder="Email"

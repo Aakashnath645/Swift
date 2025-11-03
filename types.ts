@@ -63,6 +63,7 @@ export interface Driver {
 export interface User {
   name: string;
   email: string;
+  password?: string; // For login simulation
   avatarUrl: string;
   totalRides: number;
   rating: number;

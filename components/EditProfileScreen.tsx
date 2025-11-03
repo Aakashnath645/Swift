@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useRef } from 'react';
 import { User } from '../types';
 import PageHeader from './PageHeader';
 
@@ -11,7 +12,9 @@ interface EditProfileScreenProps {
 const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ user, onBack, onSave }) => {
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
+  const [avatarUrl, setAvatarUrl] = useState(user.avatarUrl);
   const [isSaving, setIsSaving] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,11 +23,27 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ user, onBack, onS
     setIsSaving(true);
     // Simulate API call
     setTimeout(() => {
-        onSave({ ...user, name, email });
+        onSave({ ...user, name, email, avatarUrl });
         setIsSaving(false);
         onBack();
     }, 1000);
   };
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setAvatarUrl(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+    }
+  };
+
+  const handleChangePhotoClick = () => {
+    fileInputRef.current?.click();
+  };
+
 
   return (
     <div className="flex-1 flex flex-col bg-white dark:bg-gray-900 animate-fadeIn">
@@ -32,8 +51,15 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ user, onBack, onS
       <main className="flex-1 p-6">
         <form onSubmit={handleSave} className="space-y-6">
             <div className="flex flex-col items-center">
-                <img src={user.avatarUrl} alt="User Avatar" className="w-24 h-24 rounded-full border-2 border-cyan-500 dark:border-cyan-400" />
-                <button type="button" className="mt-2 text-sm text-cyan-600 dark:text-cyan-400 hover:underline">Change Photo</button>
+                <img src={avatarUrl} alt="User Avatar" className="w-24 h-24 rounded-full border-2 border-cyan-500 dark:border-cyan-400 object-cover" />
+                <input 
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handlePhotoChange}
+                    className="hidden"
+                    accept="image/*"
+                />
+                <button type="button" onClick={handleChangePhotoClick} className="mt-2 text-sm text-cyan-600 dark:text-cyan-400 hover:underline">Change Photo</button>
             </div>
             <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-600 dark:text-gray-400">Full Name</label>
