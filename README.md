@@ -1,9 +1,5 @@
 # Swift: The AI-Powered Cab Booking Experience
 
-<p align="center">
-  <img src="https://storage.googleapis.com/aistudio-hosting/framework-logos/swift-logo.svg" alt="Swift Logo" width="120">
-</p>
-
 <h3 align="center">Your ride, your way. Swiftly there.</h3>
 
 <p align="center">
